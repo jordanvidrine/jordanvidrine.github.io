@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Nested Todos App</title>
+    <link rel="stylesheet" href="./app.css">
+<link href="https://fonts.googleapis.com/css?family=Cabin:400,600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Nested Todos App</h1>
+    <input type="text" id="todo-input"></input><button id="add-todo-btn">Add</button>
+
+    <label class="container">Show All<input class="filter" type="radio" name="filter" value="show-all"><span class="checkmark"></span></label>
+    <label class="container">Show Completed<input class="filter" type="radio" name="filter" value="show-completed"><span class="checkmark"></span></label>
+    <label class="container">Show Incomplete<input class="filter" type="radio" name="filter" value="show-incomplete"><span class="checkmark"></span></label>
+
+    <div id="todos">
+    </div>
+
+    <footer class ="info">
+      <h2>Info</h2>
+      <p>This app was created as an exercise for the <a href="https://watchandcode.com/">Watch and Code premium course by Gordon Zhu</a></p>
+      <p class="name">To add a todo, type your text into the text input and click on the add button.</p>
+      <p class="name">To add a Sub Todo, type in you text as before, but click the 'add sub-todo' button of the task you wish to add on to.</p>
+      <p class="name">Clicking on the square box next to a Todo marks it as complete. A todo with uncomplete subtodos cannot be checked.</p>
+      <p class="name">Double Click to edit todos</p>
+    </br>
+      <p class='name'>Created by <a href="https://github.com/jordanvidrine/nested-todos">Jordan Vidrine</a></p>
+    </footer>
+      <script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

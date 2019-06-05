@@ -1,5 +1,5 @@
 # Javascript Projects
-Here is where I will be posting projects that are either completed or in progress on my Javascript Journey.
+Here is where I will be posting projects that are either completed or in progress on my Javascript Journey. Take a look at my [coding journey](https://github.com/jordanvidrine/coding-journey/) if you'd like to see my process of learning.
 
 ### Nested Todo App
 I created this app as an exercise in the Watch and Code Premium course. The goal was to create a Todo List app that could also create nested todos.

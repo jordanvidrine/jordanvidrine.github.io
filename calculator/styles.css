@@ -1,0 +1,132 @@
+body {
+  background-color: #f9fafc;
+  color: #303235;
+  font-family: 'Cabin', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#calc-app {
+  width: 200px;
+  padding: 5px;
+  background-color: rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+#screen {
+  background-color: rgba(0,0,0,0.15);
+  border: 2px solid #C7C8CA;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 50px;
+}
+
+#screen #currentInput {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#screen p {
+  width: auto;
+  font-size: 28px;
+  margin:0;
+}
+
+#screen .formula {
+  font-size: 10px;
+  margin: 0 5px 0 0;
+}
+
+button {
+  background-color: rgba(25,32,43,0.4);
+  border: 2px solid #C7C8CA;
+  height: 35px;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.8);
+}
+
+button:hover {
+  background-color: rgba(25,32,43,0.8);
+}
+
+#topRow {
+  display: flex;
+  width: 200px;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-grow: .5;
+}
+  #ac {
+    flex-basis: 66%;
+    flex-grow: 2;
+  }
+  #div, #mult {
+    flex-basis: 33%;
+    flex-grow: 1;
+  }
+
+#bottomRow {
+  width: 200px;
+}
+
+#sevenEightNineMinus {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+  #seven, #eight, #nine, #minus {
+    flex-basis: 25%;
+    flex-grow: 1;
+  }
+
+
+#fourFiveSixPlus {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+  #four, #five, #six, #plus {
+    flex-basis: 25%;
+    flex-grow: 1;
+  }
+
+#innerBottomRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+  #oneTwoThreeDec {
+    flex-basis: 75%;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+  }
+    #one, #two, #three {
+      flex-basis: 20%;
+      flex-grow: 1;
+    }
+
+    #decimal {
+      flex-basis: 25%;
+      flex-grow: 1;
+    }
+    #zero {
+      flex-basis: 55%;
+      flex-grow: 2;
+    }
+
+  #equal {
+    justify-content: space-around;
+    display: flex;
+    flex-grow:1;
+  }
+    #equals {
+      flex-grow: 1;
+      height: auto;
+    }

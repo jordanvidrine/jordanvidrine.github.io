@@ -6,11 +6,11 @@ I created this app as an exercise in the Watch and Code Premium course. The goal
 
 [Live Site](https://jordanvidrine.github.io/nested-todos/index.html)
 
-<img src="https://github.com/jordanvidrine/nested-todos/blob/master/Nested%20Todo%20App%20Example.gif" alt="Nested Todo Example">
+<img src="https://media.giphy.com/media/TiVjuJgQqP6cZ3iWxf/giphy.gif" alt="Nested Todo Example">
 
 ### Calculator w/ React (wip)
 I created this calculator as an exercise in the FreeCodeCamp frameworks projects. My calculator had to be similarly functioning to this one [Here](https://codepen.io/freeCodeCamp/full/wgGVVX). So far, so good. I only need to implement the ability for the app to display an error if the displayed solution is too long.
 
 [Live Site](https://jordanvidrine.github.io/calculator/index.html)
 
-<img src="https://github.com/jordanvidrine/jordanvidrine.github.io/blob/master/calculator/assetts/calculator-app.gif" alt="Calculator Example">
+<img src="https://media.giphy.com/media/lSseJ9x44HZaU8EQEb/giphy.gif" alt="Calculator Example">

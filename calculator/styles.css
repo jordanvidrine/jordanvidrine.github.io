@@ -130,3 +130,14 @@ button:hover {
       flex-grow: 1;
       height: auto;
     }
+
+    footer p {
+      font-size: 15px;
+      font-weight: lighter;
+    }
+
+    footer p.name {
+      font-size: 12px;
+      font-style: italic;
+      opacity: .5;
+    }

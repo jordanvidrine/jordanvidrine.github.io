@@ -58,7 +58,7 @@ var App = function (_React$Component) {
       formula: '',
       currentInput: '',
       buildingFormula: true,
-      lastValue: 0
+      lastValue: null
     };
     _this.buildFormula = _this.buildFormula.bind(_this);
     _this.solveFormula = _this.solveFormula.bind(_this);
@@ -69,12 +69,13 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: "buildFormula",
     value: function buildFormula(e) {
+      debugger;
       var keyPressed = e.target.innerText;
       var formula = void 0,
           currentInput = void 0;
       var stateFormula = this.state.formula;
       keyPressed = keyPressed.replace("X", "x");
-      var lastValue = !!this.state.lastValue;
+      var lastValue = !!(this.state.lastValue !== null);
 
       //if no numbers are present yet, exit the function
       if (this.state.formula == "" && keyPressed.match(/[x/+-]/g)) {
@@ -133,15 +134,18 @@ var App = function (_React$Component) {
         formula: formula,
         currentInput: currentInput,
         buildingFormula: true,
-        lastValue: 0
+        lastValue: null
       }));
     }
   }, {
     key: "solveFormula",
     value: function solveFormula() {
       var lastValue = this.state.lastValue;
-      //exit function if no numbers are present yet or lastValue is set
-      if (this.state.formula == "" || lastValue !== 0) {
+      debugger;
+      //exit function if no numbers are present yet or lastValue is set OR last character was an operator
+      var lastChar = this.state.currentInput.charAt(this.state.currentInput.length - 1);
+
+      if (this.state.formula == "" || lastValue !== null || lastChar == "-" || lastChar == "+" || lastChar == "/" || lastChar == "x") {
         return false;
       }
       var numbers = this.state.formula.split(/[-/+x]/);
@@ -192,7 +196,7 @@ var App = function (_React$Component) {
         formula: '',
         currentInput: '',
         buildingFormula: true,
-        lastValue: 0
+        lastValue: null
       });
     }
   }, {

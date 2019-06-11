@@ -6,6 +6,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// --  --  --  --  Buttons  --  --  --  -- //
+//run in node: npx babel --watch src --out-dir . --presets react-app/prod
+//Current Issues:
+// FIXED : Need to STOP the entering of multiple decimals in a number
+// FIXED: Need to add "0." to formula and current input when "." is pressed for the first time after "=" or operator
+// FIXED: An operator should not be able to be entered right after a "." press
+// FIXED: Need to stop number from getting too large for its Screen
+//FIXED: Add use of numpad to enter numbers
+
 function CalcButton(props) {
   var className = "calcButton";
   var id = props.id;
@@ -84,7 +93,6 @@ var App = function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       document.addEventListener('keypress', this.handleKeyPress);
-      document.lalala = "lalala";
     }
   }, {
     key: "componentWillUnmount",
@@ -100,7 +108,7 @@ var App = function (_React$Component) {
           currentInput = void 0;
       var stateFormula = this.state.formula;
       var stateInput = this.state.currentInput;
-      keyPressed = keyPressed.replace("*", "x");
+      keyPressed = keyPressed.replace(/[X*]/, "x");
       var lastValue = !!(this.state.lastValue !== null);
 
       //if operator was pressed and no numbers are present yet, exit the function

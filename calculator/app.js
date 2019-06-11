@@ -58,26 +58,55 @@ var App = function (_React$Component) {
       formula: '',
       currentInput: '',
       buildingFormula: true,
-      lastValue: null
+      lastValue: null,
+      error: false
     };
+    _this.handleKeyPress = _this.handleKeyPress.bind(_this);
     _this.buildFormula = _this.buildFormula.bind(_this);
     _this.solveFormula = _this.solveFormula.bind(_this);
     _this.reset = _this.reset.bind(_this);
     return _this;
   }
 
+  //let charChodes = [48,49,50,51,52,53,54,55,56,57,47,42,45,46,0]
+
+
   _createClass(App, [{
+    key: "handleKeyPress",
+    value: function handleKeyPress(e) {
+      e.preventDefault();
+      var charCodes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 47, 42, 43, 45, 46];
+      //solve formula if enter is pressed;
+      if (e.key == "Enter") {
+        this.solveFormula();
+      }
+      if (charCodes.indexOf(e.charCode) != -1) {
+        this.buildFormula(undefined, e.key);
+      }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      document.addEventListener('keypress', this.handleKeyPress);
+      document.lalala = "lalala";
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      document.removeEventListener('keypress', this.handleKeyPress);
+    }
+  }, {
     key: "buildFormula",
-    value: function buildFormula(e) {
-      debugger;
-      var keyPressed = e.target.innerText;
+    value: function buildFormula(e, keyBoardPress) {
+      var keyPressed = arguments.length > 1 ? keyBoardPress : e.target.innerText;
       var formula = void 0,
           currentInput = void 0;
       var stateFormula = this.state.formula;
-      keyPressed = keyPressed.replace("X", "x");
+      var stateInput = this.state.currentInput;
+      keyPressed = keyPressed.replace("*", "x");
       var lastValue = !!(this.state.lastValue !== null);
 
-      //if no numbers are present yet, exit the function
+      //if operator was pressed and no numbers are present yet, exit the function
       if (this.state.formula == "" && keyPressed.match(/[x/+-]/g)) {
         return false;
       }
@@ -86,12 +115,33 @@ var App = function (_React$Component) {
       if (lastValue) {
         //convert value to string to be parsed by str.match
         stateFormula = this.state.lastValue + '';
+        if (keyPressed == "." && stateFormula.match(/[.]/g)) {
+          return false;
+        }
+      }
+
+      //if error = true, reset formula and current input to 0;
+      if (this.state.error) {
+        stateFormula = '';
+        stateInput = '';
       }
 
       //FORMULA BUILDER
       //if button pressed was operator, add that to the formula (conditionally)
-      if (keyPressed.match(/[x/+-]/g)) {
-        if (stateFormula.charAt(stateFormula.length - 1).match(/[x/+-]/g)) {
+      if (keyPressed.match(/[x/+-.]/g)) {
+        //check if the current number in the formula has a decimal in it
+        var alreadyHasDecimal = !!stateFormula.split(/[x/+-]/)[stateFormula.split(/[x/+-]/).length - 1].match(/[.]/);
+        //if "." was pressed and the previous entry was an operator, change to "0." to allow for numbers to be added
+        if (keyPressed == "." && stateFormula.charAt(stateFormula.length - 1).match(/[x/+-]/g)) {
+          formula = stateFormula + "0.";
+          //if formula is empty, and "." is pressed also change to "0." to allow for numbers to be added
+        } else if (keyPressed == "." && stateFormula == '') {
+          formula = stateFormula + "0.";
+          //if an operator is pressed, and the previous entry was a decimal or an operator, exit the function (ex. cant operate on 9.)
+        } else if (stateFormula.charAt(stateFormula.length - 1).match(/[x/+-.]/g)) {
+          return false;
+          //if "." was pressed and current number on rightmost side in the formula has a decimal, exit the function
+        } else if (keyPressed == "." && alreadyHasDecimal) {
           return false;
         } else {
           formula = stateFormula + keyPressed;
@@ -104,48 +154,70 @@ var App = function (_React$Component) {
 
       //CURRENT VALUE BUILDER
       //if keyPressed is a number
-      if (!keyPressed.match(/[x/+-]/g)) {
+      if (!keyPressed.match(/[x/+-.]/g)) {
         //if not in build mode yet, assign current input to keypressed
         if (!this.state.buildingFormula) {
           currentInput = keyPressed;
         } else {
           //If in build mode...
           //first check to see if the last button entered was also a number
-          if (!this.state.currentInput.charAt(this.state.currentInput.length - 1).match(/[x/+-]/g)) {
+          if (!stateInput.charAt(stateInput.length - 1).match(/[x/+-]/g)) {
             //if it is, add the current number pressed to the input display
-            currentInput = this.state.currentInput + keyPressed;
+            currentInput = stateInput + keyPressed;
           } else {
             //if previous button was an operator, then current input will only equal keypressed
             currentInput = keyPressed;
           }
         }
       } else {
-        //check to see if previous input was an operator
-        if (this.state.currentInput.charAt(this.state.currentInput.length - 1).match(/[x/+-]/g)) {
-          //if it was, do nothing
-          currentInput = this.state.currentInput;
+        //check to see if previous input was an operator or "."
+        if (stateInput.charAt(stateInput.length - 1).match(/[x/+-.]/g)) {
+          //if it was a "." and the previous was an operator then do this
+          if (keyPressed == "." && stateInput.charAt(stateInput.length - 1).match(/[x/+-]/g)) {
+            currentInput = "0.";
+            //if it was a "." and previous input is blank
+          } else if (keyPressed == "." && stateFormula == '') {
+            console.log("i got here at least");
+          } else {
+            //if it was an operator do nothing
+            currentInput = stateInput;
+          }
         } else {
-          //if it wasnt, add the operator to the formula
-          currentInput = keyPressed;
+          //if it was not an operator or "." change currentInput to operator or number + '.'
+          if (keyPressed == ".") {
+            if (this.state.currentInput == "") {
+              currentInput = "0.";
+            } else {
+              currentInput = this.state.currentInput + ".";
+            }
+          } else {
+            currentInput = keyPressed;
+          }
         }
+      }
+
+      //check if current input is too large, if so, throw error on calc screen
+      if (currentInput.length >= 12) {
+        currentInput = "!ERROR";
+        formula = "!ERROR";
       }
 
       this.setState(Object.assign({}, this.state, {
         formula: formula,
         currentInput: currentInput,
         buildingFormula: true,
-        lastValue: null
+        lastValue: null,
+        error: currentInput == "!ERROR" ? true : false
       }));
     }
   }, {
     key: "solveFormula",
     value: function solveFormula() {
       var lastValue = this.state.lastValue;
-      debugger;
       //exit function if no numbers are present yet or lastValue is set OR last character was an operator
       var lastChar = this.state.currentInput.charAt(this.state.currentInput.length - 1);
 
-      if (this.state.formula == "" || lastValue !== null || lastChar == "-" || lastChar == "+" || lastChar == "/" || lastChar == "x") {
+      if (this.state.formula == "" || lastValue !== null || lastChar == "-" || lastChar == "+" || lastChar == "/" || lastChar == "x" || this.state.error) {
         return false;
       }
       var numbers = this.state.formula.split(/[-/+x]/);
@@ -178,15 +250,28 @@ var App = function (_React$Component) {
         //persuade the number into a string by adding ''
       }) + '';
       var formula = this.state.formula + "= " + solution;
-      //use myToFixed to round to 8 if number is too large
-      if (solution.length >= 8) {
-        solution = myToFixed(solution, 8);
+
+      //check if solution includes decimals
+      hasDecimal = !!solution.match(/[.]/g);
+
+      //use myToFixed to round to 8 if decimal part of number is too large
+      if (hasDecimal) {
+        if (solution.split(".")[1].length >= 4) {
+          solution = myToFixed(solution, 4);
+        }
       }
+
+      if (solution.length >= 12) {
+        solution = "!ERROR";
+        formula = "!ERROR";
+      }
+
       this.setState(Object.assign({}, this.state, {
         formula: formula,
         currentInput: "" + solution,
         buildingFormula: false,
-        lastValue: Number(solution)
+        lastValue: solution == "!ERROR" ? null : Number(solution),
+        error: solution == "!ERROR" ? true : false
       }));
     }
   }, {

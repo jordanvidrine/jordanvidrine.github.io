@@ -6,7 +6,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// --  --  --  --  Buttons  --  --  --  -- //
 function CalcButton(props) {
   var className = "calcButton";
   var id = props.id;
@@ -68,9 +67,6 @@ var App = function (_React$Component) {
     return _this;
   }
 
-  //let charChodes = [48,49,50,51,52,53,54,55,56,57,47,42,45,46,0]
-
-
   _createClass(App, [{
     key: "handleKeyPress",
     value: function handleKeyPress(e) {
@@ -98,6 +94,7 @@ var App = function (_React$Component) {
   }, {
     key: "buildFormula",
     value: function buildFormula(e, keyBoardPress) {
+      //if buildFormula was called by handleKeyPress then use the value passed from that
       var keyPressed = arguments.length > 1 ? keyBoardPress : e.target.innerText;
       var formula = void 0,
           currentInput = void 0;

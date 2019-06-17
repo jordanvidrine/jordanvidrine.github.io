@@ -183,7 +183,8 @@ span {
         display: flex;
         flex-direction: column-reverse;
         align-items: center;
-        width: 90%;
+        justify-content: center;
+        width: 100%;
       }
 
     span {

@@ -27,6 +27,11 @@ p:nth-of-type(1) {
   margin: 0 0 0 25px;
 }
 
+#example-header {
+  margin: 25px 0 15px 0;
+  text-align: center;
+}
+
 hr {
   display: none;
 }
@@ -138,6 +143,8 @@ span {
     width: 90%;
     border: 1px solid rgba(0,0,0,0.2);
     margin: 25px 0 0 0;
+    vertical-align: center;
+    align-self: center;
   }
 
   #projects {
@@ -171,6 +178,13 @@ span {
       justify-content: center;
       width: 90%;
     }
+
+      #projects section.web-design {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        width: 90%;
+      }
 
     span {
       font-size: 12px;

@@ -153,7 +153,7 @@ var App = function (_React$Component) {
     value: function handleWheel(e) {
       e.preventDefault;
       var volume = this.state.volume;
-      if (e.deltaY == -3) {
+      if (e.deltaY == -3 || e.deltaY == -125) {
         volume = volume + 3;
       } else {
         volume = volume - 3;
@@ -164,6 +164,7 @@ var App = function (_React$Component) {
       } else if (volume <= 0) {
         volume = 0;
       }
+      console.log(e.deltaY);
 
       this.setState(Object.assign({}, this.state, {
         volume: volume

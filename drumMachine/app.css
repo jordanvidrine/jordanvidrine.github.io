@@ -1,0 +1,205 @@
+body {
+  background-color: #f9fafc;
+  color: #303235;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cabin', sans-serif;
+  font-weight: bold;
+}
+
+p.info {
+  margin: 0 0 18px 0;
+  font-weight: 600;
+  width: 50%;
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+
+p.desc {
+  margin: 0 0 8px 0;
+  font-weight: 300;
+  width: 50%;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+
+.link a {
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none;
+  color: #3b9bd3;
+}
+
+
+hr {
+  display: block;
+  width: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+  vertical-align: center;
+  align-self: center;
+  margin: 0 0 15px 0;
+}
+
+#drum-machine {
+  width: 400px;
+  height: 150px;
+  padding: 5px;
+  margin: 25px 0 25px 0;
+  background-color: #708084;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.2);
+
+}
+  #drum-machine p {
+    font-size: 12px;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    color: rgba(0,0,0,0.5);
+  }
+
+#drum-pads {
+  width: 70%;
+  display: flex;
+  margin: 0 5px 0 0;
+  flex-direction: column;
+}
+  #drum-pads-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  #drum-pads-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+.drum-pad-top, .drum-pad-bottom {
+  width: 65px;
+  background-color: #F0F0F0;
+  height: 65px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.5);
+
+}
+
+.drum-pad-top.active, .drum-pad-bottom.active {
+  width: 65px;
+  height: 65px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.5);
+  /* background-image: radial-gradient(circle, #e3fcf9, #8ffcf1, #f0f0f0); */
+  background-image: radial-gradient(circle, #f7fc71, #fcef64, #f0f0f0);
+  -moz-box-shadow:    0 0 3px 2px rgba(227,252,249,0.3);
+  -webkit-box-shadow: 0 0 3px 2px rgba(227,252,249,0.3);
+  box-shadow:         0 0 3px 2px rgba(227,252,249,0.3);
+}
+
+#display-area {
+  display: flex;
+  width: 30%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+  #screen {
+    width: 90%;
+    height: 25%;
+    margin: 5px 5px 0 0;
+    background-color: rgba(255,255,255,0.5);
+    padding: 5px 5px 8px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 4px;
+
+  }
+    #screen p {
+      font-size: 11px;
+      margin: 0 0 2px 0;
+      color: rgba(0,0,0,0.8);
+    }
+    #screen p span {
+      font-weight: bold;
+    }
+
+  #groups {
+    width: 50%;
+    align-self: center;
+    border: 5px solid #708084;
+    height: 25%;
+    background-color: rgba(255,255,255,0.2);
+  }
+    #group-choice {
+      width: 30%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.6);
+    }
+      #group-choice.hip-hop {
+        margin: 0;
+      }
+
+      #group-choice.house {
+        margin: 0 0 0 35%;
+      }
+
+      #group-choice.rock {
+        margin: 0 0 0 70%;
+      }
+
+  #volume {
+    width: 100%;
+    height: 50%;
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+    #volume #volume-knob #volume-line {
+      width:1px;
+      height: 35%;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    @media only screen and (max-width: 800px) {
+
+      p.info {
+        margin: 0 0 18px 0;
+        font-weight: 600;
+        width: 90%;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+        text-align: center;
+      }
+
+      p.desc {
+        margin: 0 0 10px 0;
+        font-weight: 300;
+        width: 90%;
+        font-size: 12px;
+        font-family: 'Open Sans', sans-serif;
+        text-align: center;
+      }
+
+      hr {
+        display: block;
+        width: 90%;
+        border: 1px solid rgba(0,0,0,0.1);
+        vertical-align: center;
+        align-self: center;
+        margin: 0 0 15px 0;
+      }
+
+    }

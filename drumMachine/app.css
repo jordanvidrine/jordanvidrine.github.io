@@ -9,6 +9,10 @@ body {
   font-weight: bold;
 }
 
+#phone {
+  display: none;
+}
+
 p.info {
   margin: 0 0 18px 0;
   font-weight: 600;
@@ -173,33 +177,62 @@ hr {
       background-color: rgba(0,0,0,0.4);
     }
 
-    @media only screen and (max-width: 800px) {
+@media only screen and (max-width: 800px) {
 
-      p.info {
-        margin: 0 0 18px 0;
-        font-weight: 600;
-        width: 90%;
-        font-size: 14px;
-        font-family: 'Open Sans', sans-serif;
-        text-align: center;
-      }
+  p.info {
+    margin: 0 0 18px 0;
+    font-weight: 600;
+    width: 90%;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+  }
 
-      p.desc {
-        margin: 0 0 10px 0;
-        font-weight: 300;
-        width: 90%;
-        font-size: 12px;
-        font-family: 'Open Sans', sans-serif;
-        text-align: center;
-      }
+  p.desc {
+    margin: 0 0 10px 0;
+    font-weight: 300;
+    width: 90%;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+  }
 
-      hr {
-        display: block;
-        width: 90%;
-        border: 1px solid rgba(0,0,0,0.1);
-        vertical-align: center;
-        align-self: center;
-        margin: 0 0 15px 0;
-      }
+  hr {
+    display: block;
+    width: 90%;
+    border: 1px solid rgba(0,0,0,0.1);
+    vertical-align: center;
+    align-self: center;
+    margin: 0 0 15px 0;
+  }
 
-    }
+}
+
+@media only screen and (max-width: 500px) {
+  #app {
+    display: none;
+  }
+
+  #phone {
+    display: inline;
+    text-align: center;
+    width: 300px;
+    height: 150px;
+    background-color: rgba(0,0,0,0.2);
+  }
+
+  p.info {
+    margin: 10px 10px 0 10px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+  }
+
+  p.desc {
+    margin: 10px 10px 0 10px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+  }
+
+}

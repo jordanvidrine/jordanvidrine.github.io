@@ -5,58 +5,24 @@ $("#todos").on('click', '#complete-todo', toggleTodo)
 $("#todos").on('dblclick', ".todo", editTodo)
 $('.filter').on('change', filterTodos)
 $('#todos').on('click',"#add-sub-todos-btn", addSubTodo)
-  $("#todos").on('click', "#edit-todo-btn", submitEdit)
+ $("#todos").on('click', "#edit-todo-btn", submitEdit)
 
 var todos = store('stored-todos');
 
-function editTodo(e) {
-  $("#todos").off('dblclick', ".todo", editTodo)
-  let id = e.target.id;
-  let prevText = e.target.firstElementChild.nextSibling.data;
-  let todoToEdit = document.getElementById(id);
-  let editInput = `- <input type="text" id="edit-input" value="${prevText}"></input><button id="edit-todo-btn">Confirm</button>`
-  $(todoToEdit).html(editInput)
-}
-
-function submitEdit(e) {
-  let textValue = e.target.previousElementSibling.value;
-  let id = e.target.parentElement.id;
-  editTodosInPlace(todos,id,textValue);
-  store('stored-todos', todos);
-  render(todos);
-  $("#todos").on('dblclick', ".todo", editTodo)
-}
-
-function editTodosInPlace(todos,id,text) {
-  debugger;
-  if (Array.isArray(todos)) {
-    return todos.map(todo => {
-      if (todo.id === id) {
-        todo.title = text;
-      }
-      if (todo.subTodos.length) {
-        editTodosInPlace(todo.subTodos,id,text);
-      }
-      return todo;
-    })
-  } else {
-    if (todos.id === id) {
-      todos.text = text;
-    }
-    return todos;
-  }
-}
-
 function addTodo(){
-  todos.push({
-    id: uid(),
-    title: todoInput.value,
-    completed: false,
-    subTodos: [],
-  })
-  store('stored-todos', todos);
-  render(todos);
-  $("#todo-input").focus()
+    if (todoInput.value == '') {
+        $("#todo-input").focus()
+        return false;
+    }
+    todos.push({
+        id: uid(),
+        title: todoInput.value,
+        completed: false,
+        subTodos: [],
+    })
+    store('stored-todos', todos);
+    render(todos);
+    $("#todo-input").focus()
 }
 
 function addSubTodo(e){
@@ -68,12 +34,12 @@ function addSubTodo(e){
 }
 
 function addSubTodoInPlace(todo,id,text) {
-  //checks if an array was passed
+  // checks if an array was passed
   if (Array.isArray(todo)) {
     return todo.map(element => {
-      //checks if the element of the Todos has subTodos
+      // checks if the element of the Todos has subTodos
       if (element.subTodos.length) {
-        //if so, also check if this element is the one to add a subTodo to then return it
+        // if so, also check if this element is the one to add a subTodo to then return it
         if (element.id === id) {
           element.subTodos.push({
             id: uid(),
@@ -82,12 +48,12 @@ function addSubTodoInPlace(todo,id,text) {
             subTodos: [],
           });
           return element;
-        //if not, then cycle through the subTodos
+        // if not, then cycle through the subTodos
         } else {
           element.subTodos = addSubTodoInPlace(element.subTodos,id,text);
           return element;
         }
-      //if the element does not have subTodos, then check the element itself to see if this is the element to add a subTodo to
+      // if the element does not have subTodos, then check the element itself to see if this is the element to add a subTodo to
       } else {
         if (element.id === id) {
           element.subTodos.push({
@@ -117,14 +83,59 @@ function addSubTodoInPlace(todo,id,text) {
   }
 }
 
+// puts the double clicked todo element into edit mode
+function editTodo(e) {
+  $("#todos").off('dblclick', ".todo", editTodo)
+  let id = e.target.id;
+  let prevText = e.target.firstElementChild.nextSibling.data;
+  let todoToEdit = document.getElementById(id);
+  let editInput = `- <input type="text" id="edit-input" value="${prevText}"></input><button id="edit-todo-btn">Confirm</button>`
+  $(todoToEdit).html(editInput)
+}
+
+// submits the user input from edit mode as the new value
+function submitEdit(e) {
+  let textValue = e.target.previousElementSibling.value;
+  let id = e.target.parentElement.id;
+  // if user input is '', alert the user through inserting 'Cannot Be Blank'
+  if (textValue == '') {
+      return false;
+  }
+  editTodosInPlace(todos,id,textValue);
+  store('stored-todos', todos);
+  render(todos);
+  $("#todos").on('dblclick', ".todo", editTodo)
+}
+
+// finds the todo that was edited based on ID, then changes that text to the user input from edit mode
+function editTodosInPlace(todos,id,text) {
+  if (Array.isArray(todos)) {
+    return todos.map(todo => {
+      if (todo.id === id) {
+        todo.title = text;
+      }
+      if (todo.subTodos.length) {
+        editTodosInPlace(todo.subTodos,id,text);
+      }
+      return todo;
+    })
+  } else {
+    if (todos.id === id) {
+      todos.text = text;
+    }
+    return todos;
+  }
+}
+
+// begins the process of deleting the todo by grabbing its id, then sending that to deleteInPlace()
 function deleteTodo(e) {
   let id = e.target.parentElement.id;
-  console.log(id);
   todos = deleteInPlace(todos,id);
   store('stored-todos', todos);
   render(todos);
 }
 
+// searches through the todos recursively and deletes the todo corresponding to the ID found
 function deleteInPlace(todos, id) {
   if(Array.isArray(todos)) {
     return todos.filter(todo => {
@@ -152,11 +163,11 @@ function toggleInPlace(todos, id) {
     return todos.map(todo => {
       if (todo.subTodos.length) {
         toggleInPlace(todo.subTodos,id);
-        //only toggles if it is a solo todo OR all of the todos SUBtodos are complete
+        // only toggles if it is a solo todo OR all of the todos SUBtodos are complete
         if (todo.id === id && todo.subTodos.filter(e=>e.completed).length === todo.subTodos.length) {
           todo.completed = !todo.completed;
         }
-        //if a Todo is complete, but you uncheck one of its subs, the parent will become incomplete
+        // if a Todo is complete, but you uncheck one of its subs, the parent will become incomplete
         if(todo.subTodos.filter(e=>e.completed).length !== todo.subTodos.length) {
           todo.completed = false;
         }
@@ -184,7 +195,7 @@ function clearCompleted() {
 
 function filterTodos(e){
   let filteredTodos;
-  //create a new local array of todos based on radio button clicked
+  // create a new local array of todos based on radio button clicked
   if (e.target.value == "show-completed") {
     filteredTodos = todos.filter(e => e.completed == true);
   } else if (e.target.value == "show-all") {
@@ -193,11 +204,11 @@ function filterTodos(e){
   else {
     filteredTodos = todos.filter(e => e.completed == false);
   }
-  //render the filtered todos, but do not store it
+  // render the filtered todos, but do not store it
   render(filteredTodos);
 }
 
-//taken from todoMVC
+// taken from todoMVC
 function store(namespace, data) {
   if (arguments.length > 1) {
     return localStorage.setItem(namespace, JSON.stringify(data));
@@ -219,23 +230,23 @@ function render(todos) {
 
 function todoParser(arr) {
     return arr.reduce(function(accumulator,currentValue,idx) {
-            //add the current element to the accumulator html as the first LI tag
-            //accumulator += `<li>${currentValue.title}</li>`;
+            // add the current element to the accumulator html as the first LI tag
+            // accumulator += `<li>${currentValue.title}</li>`;
             accumulator += todoCreator(currentValue);
-            //check if the current element has subTodos
+            // check if the current element has subTodos
             if (currentValue.subTodos.length) {
-              //if it does, recurse through the subTodo array
+              // if it does, recurse through the subTodo array
               accumulator += todoParser(currentValue.subTodos);
-              //once thats done, check if this is the last element of its array
-              //if it is, add a closing UL tag to end the section
+              // once thats done, check if this is the last element of its array
+              // if it is, add a closing UL tag to end the section
 			        if (idx == arr.length - 1) {
               	accumulator += `</ul>`;
               	return accumulator;
               } else {
 	                return accumulator;
 			          }
-            } //if current element does NOT have subTodos, just check if its the last element
-              //and add a closing UL tag, if not, return the accumulator
+            } // if current element does NOT have subTodos, just check if its the last element
+              // and add a closing UL tag, if not, return the accumulator
               else {
   			        if (idx == arr.length - 1) {
                 	accumulator += `</ul>`;
@@ -261,7 +272,7 @@ function todoCreator(todo) {
   )
 }
 
-//taken from todoMVC
+// taken from todoMVC
 function uid() {
   /*jshint bitwise:false */
   var i, random;

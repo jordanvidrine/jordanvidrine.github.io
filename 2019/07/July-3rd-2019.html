@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - July 3rd 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="https://media.licdn.com/dms/image/C5603AQGuQnyqi_WYSQ/profile-displayphoto-shrink_200_200/0?e=1565827200&v=beta&t=LY5mk_3gumx40ZQP2FBSoKf_8xTb4SKGF7P0KFJkIW4">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>July 3rd 2019</h2>
+    <p>Spent the first couple of hours of my day trying to integrate pagination into this blog. It turned out very frustrating and uneventful because github pages does not support the newest jekyll pagination gem. I couldn’t for the life of me get the v1 of their gem to work either. I’ll have to look into that in some free time. Onto my node course!</p>
+
+<h4 id="user-password-hashing-using-bcrpyt">User Password Hashing using bcrpyt</h4>
+<p>We will use bcrpyt in our task-manager app (the one I’ve been creating in this course) to save hashed versions of user passwords, as opposed to the literal password string. The following code will use bcrpyt.hash() to do this.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">bcrpyt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">bcryptjs</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">myFunction</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">password</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Red12345!</span><span class="dl">'</span>
+<span class="c1">// hash() accepts the string to hash, and a number of rounds to run the hash</span>
+<span class="c1">// algorithm. 8 is the value recommended from the original creator of the</span>
+<span class="c1">// bcrypt algorithm</span>
+  <span class="kd">const</span> <span class="nx">hashedPassword</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hashedPassword</span><span class="p">)</span>
+
+
+<span class="p">}</span>
+
+<span class="nx">myFunction</span><span class="p">()</span>
+
+</code></pre></div></div>
+<!--more-->
+<p>Hashing algorithms are one way algorithms. You cannot reverse this, by design, to keep passwords safe and secure.</p>
+
+<p>How can a user login if we are saving the passoword as a hash? bcrpyt gives us a way to do that. We can hash the password the user enters and compare it to the hashed password stored in the database. The method we will use for this is bcrypt.compare(passwordString, hashedPasswordToCompareItTo)</p>
+
+<h4 id="implementing-in-a-mongoose-model-with-middleware">Implementing in a mongoose model with middleware</h4>
+<p>Middleware are functions which are passed during the execution of async functions. For documents, the following doccument functions support middleware : validate, save, remove, + init. We want to run some code, BEFORE, a user is saved.</p>
+
+<p>To do this, instead of passing an object to the User created with mongoose.model() , we will predefine a schema to pass in. This separates the creation of the schema from the creation of the model like so.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">userSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span><span class="p">({</span>
+<span class="c1">// data here</span>
+<span class="p">})</span>
+
+<span class="c1">// middleware to run BEFORE saving</span>
+<span class="nx">userSchema</span><span class="p">.</span><span class="nx">pre</span><span class="p">(</span><span class="dl">'</span><span class="s1">save</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">just before saving</span><span class="dl">'</span><span class="p">)</span>
+  <span class="c1">// needs to be called or else the middleware wont move forward in the save process</span>
+  <span class="nx">next</span><span class="p">()</span>
+<span class="p">})</span>
+
+<span class="kd">const</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="dl">'</span><span class="s1">User</span><span class="dl">'</span><span class="p">,</span> <span class="nx">userSchema</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">User</span>
+</code></pre></div></div>
+<p>Now, if we want to get this to work when UPDATING, and not only when creating a new user, we have some changes to make in our router file because certain mongoose queries bypass middleware.</p>
+
+<p>In the try block of our user update put method in the user routers, we make this change:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+<span class="nx">updates</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">updateField</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">user</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="c1">// old way of doing it</span>
+<span class="c1">// const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})</span>
+</code></pre></div></div>
+<p>Now all that’s left is to write the middleware to look for a change or a save to ‘password’ and run code when that happens. Inside of the userSchema middleware for ‘save’ we add:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">isModified</span><span class="p">(</span><span class="dl">'</span><span class="s1">password</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">user</span><span class="p">.</span><span class="nx">password</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">next</span><span class="p">()</span>
+</code></pre></div></div>
+<h4 id="logging-a-user-in">Logging a user in</h4>
+<p>The first thing we need to do is add a post route for a user to send their email and password to the DB to check if those things are correct. We will create a method on the User model to do this. We can do this in the User model js file after we define the user like so:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// adds the method to the User model</span>
+<span class="nx">userSchema</span><span class="p">.</span><span class="nx">statics</span><span class="p">.</span><span class="nx">findByCredentials</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// code goes here</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

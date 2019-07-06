@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - June 18th 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="https://media.licdn.com/dms/image/C5603AQGuQnyqi_WYSQ/profile-displayphoto-shrink_200_200/0?e=1565827200&v=beta&t=LY5mk_3gumx40ZQP2FBSoKf_8xTb4SKGF7P0KFJkIW4">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>June 18th 2019</h2>
+    <p>I finished the Drum Machine React App and uploaded it <a href="https://jordanvidrine.github.io/drumMachine/index.html">here</a>. I am pretty proud of the way it came out as well. It was cool to finish this without really encountering any issues. I learned more about mouse and click events creating the app, but other than that, it was really easy.</p>
+
+<h4 id="other-activities">Other Activities</h4>
+<p>Continued learning Node.js with a udemy course. Went through using routes and began learning the basics of the Express NPM module. Used that and handlebars ‘hbs’ in Node to go through a nice templating tutorial with custom routes.
+<!--more--></p>
+
+<p>Here is the JS for that</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">)</span> <span class="c1">//lets you specify path directorys</span>
+<span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">hbs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">hbs</span><span class="dl">'</span><span class="p">);</span> <span class="c1">//for partials</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">publicDirectoryPath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">../public</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">viewsPath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">../templates/views</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">partialsPath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">../templates/partials</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">//to use a different name than views for your templates engine</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">view engine</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hbs</span><span class="dl">'</span><span class="p">)</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">views</span><span class="dl">'</span><span class="p">,</span> <span class="nx">viewsPath</span><span class="p">)</span>
+<span class="nx">hbs</span><span class="p">.</span><span class="nx">registerPartials</span><span class="p">(</span><span class="nx">partialsPath</span><span class="p">)</span>
+
+<span class="c1">//create and render a 404 page with hanldebars</span>
+<span class="c1">//setup the template to render header and footer</span>
+<span class="c1">//set up to render error message in paragraph</span>
+<span class="c1">//page not found</span>
+<span class="c1">//help article not found</span>
+
+<span class="c1">//specifies what directory to use for "/" get path</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kd">static</span><span class="p">(</span><span class="nx">publicDirectoryPath</span><span class="p">))</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">''</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">//renders the view with the name you put in</span>
+  <span class="c1">//as well as on object of values for the view to access</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="dl">'</span><span class="s1">index</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Weather</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/about</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="dl">'</span><span class="s1">about</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">About Page</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/help</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="dl">'</span><span class="s1">help</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Help Page</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">helpText</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Do you need any help?</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/weather</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">forecast</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Not so great</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">location</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Eunice, LA</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Weather</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/help/*</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="dl">'</span><span class="s1">404</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">404 Error! Page</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">errorMessage</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Oops! This help article doesnt exist!</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="c1">//matches anything that hasnt been matched so far 404 Error</span>
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="dl">'</span><span class="s1">404</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">404 Error! Page</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan Vidrine</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">errorMessage</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Oops! This page doesnt exist!</span><span class="dl">'</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server is up on port 3000</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">}</span> <span class="p">)</span>
+
+</code></pre></div></div>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

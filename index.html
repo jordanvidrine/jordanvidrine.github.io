@@ -144,6 +144,21 @@
   <ul>
     
     <li>
+      <h3>July 5th & 6th 2019</h3>
+      <p><p>Spent a couple of hours yesterday and today implementing pagination onto my site and blog. I met with a professional programmer and he had some great suggestions for what my portfolio should showcase, as well as some input for the blog.</p>
+
+<h4 id="things-i-implemented-and-changed">Things I Implemented and Changed</h4>
+<p><strong>1.</strong> The blog now shows a max of 10 posts on a single page. Each post also has a tag that tells Jekyll where to put the “Read More…” link.<br /><br />
+<strong>2.</strong> The home page is now my project showcase, and at the bottom of the page, my latest 2 entries show up for anyone who is interested to read it.<br /><br />
+<strong>3.</strong> I uploaded everything to my domain at <a href="www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
+<strong>4.</strong> I removed my github pages ‘blog’ and that all now resides on the github page for jordanvidrine.github.io<br /><br /></p>
+
+<p>After making edits, I use the <code class="highlighter-rouge">bundle exec jekyll build</code> command to build the site into normal html, css, and javascript files. I then upload that to both my github page, as well as my domain. I really like the consistency of my new site now and am pleased with the blogging functionality I put into it.</p>
+</p>
+      
+    </li>
+    
+    <li>
       <h3>July 3rd 2019</h3>
       <p><p>Spent the first couple of hours of my day trying to integrate pagination into this blog. It turned out very frustrating and uneventful because github pages does not support the newest jekyll pagination gem. I couldn’t for the life of me get the v1 of their gem to work either. I’ll have to look into that in some free time. Onto my node course!</p>
 
@@ -170,59 +185,6 @@
 </p>
       
       <a href="/2019/07/July-3rd-2019.html">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h3>July 2nd 2019</h3>
-      <p><h4 id="promise-chaining">Promise Chaining</h4>
-<p>I’ve worked with basic promises with the past couple of exercises in the Node.js course. What if we wanted to to multiple tasks, after each step of operating with the Promise returned. Ie. First get a lat,long from a geocoding API, then use that data to get weather info; or mark a task as complete, then get the total number of incomplete tasks left to do.</p>
-
-<p>Here is where Promise Chaining comes into play.</p>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Here is an example of a basic Promise that will always return the sum after 2 seconds. An error is</span>
-<span class="c1">// not programmed to take place.</span>
-<span class="kd">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">resolve</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">)</span>
-    <span class="p">},</span><span class="mi">2000</span><span class="p">)</span>
-  <span class="p">})</span>
-<span class="p">}</span>
-
-<span class="c1">// What if you want to perform more asynchronous actions after receiving the resolved promise? One way</span>
-<span class="c1">// (a bad way) is to nest more calls to the Promise inside of the returned resolution as such. This</span>
-<span class="c1">// will QUICKLY get confusing and convoluted so it is not a good idea</span>
-<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
-
-  <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span><span class="mi">5</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
-  <span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-  <span class="p">})</span>
-
-<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-<span class="p">})</span>
-
-<span class="c1">// Promise Chaining</span>
-<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
-  <span class="c1">// return a call to add, this will send the returned value to the next chained .then() method</span>
-  <span class="k">return</span> <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
-  <span class="c1">// this one call to .catch() will apply to any error that happens in the chain</span>
-<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a href="/2019/07/July-2nd-2019.html">Read More...</a>
       
     </li>
     

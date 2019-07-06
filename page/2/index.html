@@ -144,6 +144,59 @@
   <ul>
     
     <li>
+      <h3>July 2nd 2019</h3>
+      <p><h4 id="promise-chaining">Promise Chaining</h4>
+<p>I’ve worked with basic promises with the past couple of exercises in the Node.js course. What if we wanted to to multiple tasks, after each step of operating with the Promise returned. Ie. First get a lat,long from a geocoding API, then use that data to get weather info; or mark a task as complete, then get the total number of incomplete tasks left to do.</p>
+
+<p>Here is where Promise Chaining comes into play.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// Here is an example of a basic Promise that will always return the sum after 2 seconds. An error is</span>
+<span class="c1">// not programmed to take place.</span>
+<span class="kd">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">)</span>
+    <span class="p">},</span><span class="mi">2000</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1">// What if you want to perform more asynchronous actions after receiving the resolved promise? One way</span>
+<span class="c1">// (a bad way) is to nest more calls to the Promise inside of the returned resolution as such. This</span>
+<span class="c1">// will QUICKLY get confusing and convoluted so it is not a good idea</span>
+<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
+
+  <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span><span class="mi">5</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
+  <span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+  <span class="p">})</span>
+
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// Promise Chaining</span>
+<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
+  <span class="c1">// return a call to add, this will send the returned value to the next chained .then() method</span>
+  <span class="k">return</span> <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
+  <span class="c1">// this one call to .catch() will apply to any error that happens in the chain</span>
+<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+</p>
+      
+      <a href="/2019/07/July-2nd-2019.html">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h3>July 1st 2019</h3>
       <p><p>I have decided to reformat most if not all journal entries from today foward to act more like a note taking platform and a more detailed description of what I am learning. I will be updating throughout my day, rather than at the end of the day.</p>
 
@@ -161,18 +214,6 @@
 </p>
       
       <a href="/2019/07/July-1st-2019.html">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h3>June 28th 2019</h3>
-      <p><p>Today was a short one coding wise. Looked over the horoku/git commands to run and pull/push the apps I’ve been working on to another computer.</p>
-
-<p>I styled the my Stock Charting app for mobile use and implemented responsive styling for the Chart.js app that I seemed to look over when designing it earlier this week. I love how it turned out. Take a look at it <a href="https://jbv-stock-app.herokuapp.com/">here</a></p>
-
-<h4 id="and-heres-what-it-looks-like">And here’s what it looks like</h4>
-<p><img src="https://i.postimg.cc/YSB1TTYC/stock.jpg" alt="Stock App Preview" /></p>
-</p>
       
     </li>
     

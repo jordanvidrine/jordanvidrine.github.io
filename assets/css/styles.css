@@ -220,9 +220,6 @@ body {
 #blogging-mobile {
   display: none; }
 
-p:nth-of-type(1) {
-  text-indent: 25px; }
-
 #bio {
   display: flex;
   flex-direction: row;
@@ -341,7 +338,6 @@ span {
       margin: 0 0 50px 0; }
       #posts ul li p {
         font-size: 13px;
-        text-indent: 25px;
         color: #303235; }
       #posts ul li a {
         text-decoration: none;

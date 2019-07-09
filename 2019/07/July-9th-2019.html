@@ -51,15 +51,15 @@
 
 <h4 id="callbacks">Callbacks</h4>
 <p>One approach to async programming is to make functions that perform a slow action take a callback argument to run when the code is finished working. (We learned about this in the NodeJS course we are currently working through.) As we learned previously, this can get convoluted quickly when wanting to perform more than one async operation. The example below has two callbacks. Any more and this could lead to hard to lots of nesting and hard to read code. IE.</p>
-<pre><code class="language-Javascript">import {bigOak} from "./crow-tech";
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">bigOak</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./crow-tech</span><span class="dl">"</span><span class="p">;</span>
 
-bigOak.readStorage("food caches", caches =&gt; { // first callback
-  let firstCache = caches[0];
-  bigOak.readStorage(firstCache, info =&gt; { // second nested callback
-    console.log(info);
-  });
-});
-</code></pre>
+<span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="dl">"</span><span class="s2">food caches</span><span class="dl">"</span><span class="p">,</span> <span class="nx">caches</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// first callback</span>
+  <span class="kd">let</span> <span class="nx">firstCache</span> <span class="o">=</span> <span class="nx">caches</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="nx">firstCache</span><span class="p">,</span> <span class="nx">info</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// second nested callback</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
 <!--more-->
 
 <h4 id="promises">Promises</h4>
@@ -77,41 +77,41 @@ bigOak.readStorage("food caches", caches =&gt; { // first callback
 <p>To get the result of the promise, you call the <code class="highlighter-rouge">.then</code> method with a callback. This will register that callback to run when the promise is resolved. and produces a value.<br /> <br />
 <strong>Something I didnt know:</strong>
 You can call <code class="highlighter-rouge">.then</code> multiple times on a single promise, and they will be called, even if you add them after the promise has already resolved (finished).</p>
-<pre><code class="language-Javascript">let promiseWait = new Promise((resolve,reject) =&gt; {
-  setTimeout(() =&gt; {
-    resolve(5)
-  },10000)
-})
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">promiseWait</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">resolve</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="p">},</span><span class="mi">10000</span><span class="p">)</span>
+<span class="p">})</span>
 
-promiseWait.then(val =&gt; console.log(`got ${val + 5}`))
-// after 10 seconds
-// got 10
+<span class="nx">promiseWait</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`got </span><span class="p">${</span><span class="nx">val</span> <span class="o">+</span> <span class="mi">5</span><span class="p">}</span><span class="s2">`</span><span class="p">))</span>
+<span class="c1">// after 10 seconds</span>
+<span class="c1">// got 10</span>
 
-promiseWait.then(val =&gt; console.log(`got ${val + 10}`))
-// no waiting since promise is resolved with 5
-// got 15
-</code></pre>
+<span class="nx">promiseWait</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">val</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`got </span><span class="p">${</span><span class="nx">val</span> <span class="o">+</span> <span class="mi">10</span><span class="p">}</span><span class="s2">`</span><span class="p">))</span>
+<span class="c1">// no waiting since promise is resolved with 5</span>
+<span class="c1">// got 15</span>
+</code></pre></div></div>
 <p>This seems valuable to me because you can get data and store it in a variable as a promise. Once that promise resolves, you can use that same data on multiple other functions or calculations.</p>
 
 <p>If you use the return statement in a <code class="highlighter-rouge">.then</code> method, it will return another promise resolved with whatever functions or calculations you performed on it, or, if whatever you manipulate it with returns a promise, it returns a promise, waits for that to be resolved, and then resolves to its result.</p>
-<pre><code class="language-Javascript">let promiseWait = new Promise((resolve,reject) =&gt; {
-  setTimeout(()=&gt;{
-    resolve(15)
-  },10000)
-}).then(value =&gt; {
-    console.log(`Value = ${value} from first promise`)
-    return new Promise((resolve,reject) =&gt; {
-      setTimeout(() =&gt; {
-        resolve(value+5)
-      },5000)
-    })
-}).then(newVal =&gt; console.log(`Value = ${newVal} from second promise`))
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">promiseWait</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">setTimeout</span><span class="p">(()</span><span class="o">=&gt;</span><span class="p">{</span>
+    <span class="nx">resolve</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+  <span class="p">},</span><span class="mi">10000</span><span class="p">)</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">value</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Value = </span><span class="p">${</span><span class="nx">value</span><span class="p">}</span><span class="s2"> from first promise`</span><span class="p">)</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">resolve</span><span class="p">(</span><span class="nx">value</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span>
+      <span class="p">},</span><span class="mi">5000</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">newVal</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Value = </span><span class="p">${</span><span class="nx">newVal</span><span class="p">}</span><span class="s2"> from second promise`</span><span class="p">))</span>
 
-// After 10 seconds
-// Value = 15 from first promise
-// After 5 More seconds
-// Value = 20 from second promise
-</code></pre>
+<span class="c1">// After 10 seconds</span>
+<span class="c1">// Value = 15 from first promise</span>
+<span class="c1">// After 5 More seconds</span>
+<span class="c1">// Value = 20 from second promise</span>
+</code></pre></div></div>
 <p>I like the following description from the book:</p>
 <blockquote>
   <p>It is useful to think of promises as a device to move values into an asynchronous reality. A normal value is simply there. A promised value is a value that might already be there or might appear at some point in the future. Computations defined in terms of promises act on such wrapped values and are executed asynchronously as the values become available.</p>
@@ -123,65 +123,65 @@ promiseWait.then(val =&gt; console.log(`got ${val + 10}`))
 <p>With Promises though this becomes a great deal easier. They can either be resolved, or rejected. If resolved, the result is passed to the next <code class="highlighter-rouge">.then</code> method. If rejected however, all <code class="highlighter-rouge">.then</code> methods are ignored after the failure, and the promise will jump to the <code class="highlighter-rouge">.catch</code> method to handle the error. <code class="highlighter-rouge">.catch</code> Is very mich like <code class="highlighter-rouge">.then</code> in that it returns a new promise which resolves to the original promises value if it resolves normally, otherwise it resolves to the value of the <code class="highlighter-rouge">.catch</code> handler.</p>
 
 <p>As a shorthand, <code class="highlighter-rouge">.then</code> also accepts a rejection handler as a second argument, alongside the resolve function, which it can use to reject the new promise. Here is an example from the book of what a chain can look like.</p>
-<pre><code class="language-Javascript">new Promise((_, reject) =&gt; reject(new Error("Fail")))
-  .then(value =&gt; console.log("Handler 1"))
-  .catch(reason =&gt; {
-    console.log("Caught failure " + reason);
-    return "nothing";
-  })
-  .then(value =&gt; console.log("Handler 2", value));
-// → Caught failure Error: Fail
-// → Handler 2 nothing
-</code></pre>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">_</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">reject</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">"</span><span class="s2">Fail</span><span class="dl">"</span><span class="p">)))</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">value</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Handler 1</span><span class="dl">"</span><span class="p">))</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">reason</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Caught failure </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">reason</span><span class="p">);</span>
+    <span class="k">return</span> <span class="dl">"</span><span class="s2">nothing</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">value</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Handler 2</span><span class="dl">"</span><span class="p">,</span> <span class="nx">value</span><span class="p">));</span>
+<span class="c1">// → Caught failure Error: Fail</span>
+<span class="c1">// → Handler 2 nothing</span>
+</code></pre></div></div>
 <p>What happens here is the promise immediately rejects, passing over the <code class="highlighter-rouge">.then</code> method and sending the <code class="highlighter-rouge">.catch</code> method an <code class="highlighter-rouge">Error("Fail")</code>. The <code class="highlighter-rouge">.catch</code> method logs this and its reason to the console and returns a value string of “Nothing”. When something is returned from a <code class="highlighter-rouge">.catch</code> or <code class="highlighter-rouge">.then</code> method, it is returned as a promise. Since this promise is resolved with the str of ‘nothing’ the next <code class="highlighter-rouge">.then</code> method can handle it. It then logs ‘Handler 2’ + the resolved promise value of ‘nothing’ to the console.</p>
 
 <p>Javascript can also detect when errors are not handled. If a promise is rejected without a call to <code class="highlighter-rouge">.catch</code> javascript will throw an error to the console.</p>
 
 <h4 id="importance-of-exception-handling">Importance of exception handling</h4>
 <p>It is also important to handle exceptions with Promises. What if the network is down, and our resolve or reject doesnt return anything? What if a function name was typed or misspelled? We should handle this issue with a <code class="highlighter-rouge">try / catch</code> statement.</p>
-<pre><code class="language-Javascript">promiseErrorTest = () =&gt; { return new Promise((resolve,reject) =&gt; {
-  let rndm = Math.floor(Math.random()*100)
-  setTimeout(() =&gt; {
-    if (rndm &gt; 50) {
-      resolve('Resolved Promise')
-    } else {
-      reject(new Error('Rejected!'))
-    }
-  }, 5000)
-})}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">promiseErrorTest</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">rndm</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">rndm</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="dl">'</span><span class="s1">Resolved Promise</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">reject</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Rejected!</span><span class="dl">'</span><span class="p">))</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="p">})}</span>
 
-tryPromise = () =&gt; {
-  try {
-    promiseErrorTest().then(val=&gt;console.log(val),
-                            rejection=&gt;console.log(rejection))
-  } catch (e) {
-    console.log(`Failure: ${e}`)
-  }
-}
+<span class="nx">tryPromise</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="nx">promiseErrorTest</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">val</span><span class="o">=&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">),</span>
+                            <span class="nx">rejection</span><span class="o">=&gt;</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">rejection</span><span class="p">))</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Failure: </span><span class="p">${</span><span class="nx">e</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-tryPromise()
-// wait 5 seconds then randomly resolve or rejects
-// 'Resolved Promise' or 'Error: Rejected!'
+<span class="nx">tryPromise</span><span class="p">()</span>
+<span class="c1">// wait 5 seconds then randomly resolve or rejects</span>
+<span class="c1">// 'Resolved Promise' or 'Error: Rejected!'</span>
 
-// What if we misspelled promiseErrorTest in the tryPromise function?
-// The catch (e) part of the try catch statement will CATCH this issue and return
-// Failure: ReferenceError: promiseErrorTet is not defined
-</code></pre>
+<span class="c1">// What if we misspelled promiseErrorTest in the tryPromise function?</span>
+<span class="c1">// The catch (e) part of the try catch statement will CATCH this issue and return</span>
+<span class="c1">// Failure: ReferenceError: promiseErrorTet is not defined</span>
+</code></pre></div></div>
 
 <h4 id="collections-of-promises">Collections of Promises</h4>
 <p>When working with a collection of Promises running at the same time, the <code class="highlighter-rouge">Promise.all</code> function is very useful. It returns a promise that waits for all of the promises in an array to resolve and then resolves to an array of the values produced. If any promise is rejected, the result of Promise.all is itself rejected. Lets test this out. First, lets create a fake promise.</p>
-<pre><code class="language-Javascript">let fakePromise = (val) =&gt; {
-  return new Promise((resolve,reject) =&gt; {
-    setTimeout(()=&gt;{
-      let rndm = Math.floor(Math.random()*10)
-      if (rndm % 2 == 0) {
-        resolve(val)
-      }
-      reject('Promise Didnt Work')
-    },3000)
-  })
-}
-</code></pre>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">fakePromise</span> <span class="o">=</span> <span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(()</span><span class="o">=&gt;</span><span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">rndm</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">rndm</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">resolve</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nx">reject</span><span class="p">(</span><span class="dl">'</span><span class="s1">Promise Didnt Work</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">},</span><span class="mi">3000</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
 <p>Then, lets create a <code class="highlighter-rouge">Promise.all</code> call using a couple of the fake promises.</p>
 <pre><code class="language-Javascript">Promise.all([
   fakePromise(1),
@@ -192,38 +192,38 @@ tryPromise()
 // uncaught exception: Promise Didnt Work
 </code></pre>
 <p>Hmm. So it seems that the Promise.all ONLY returns when every single proimise is fulfilled. Although cool, it seems a little useless if we want to know what failed and what didnt. To help we can attach a catch statement to each fakePromise() call like so:</p>
-<pre><code class="language-Javascript">Promise.all([
-  fakePromise(1).catch(e =&gt; e),
-  fakePromise(2).catch(e =&gt; e),
-  fakePromise(3).catch(e =&gt; e)
-]).then(results =&gt; console.log(results))
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">),</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">),</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">)</span>
+<span class="p">]).</span><span class="nx">then</span><span class="p">(</span><span class="nx">results</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">))</span>
 
-// Array(3) [ 1, "Promise Didnt Work", 3 ]
-</code></pre>
+<span class="c1">// Array(3) [ 1, "Promise Didnt Work", 3 ]</span>
+</code></pre></div></div>
 <p>I feel like I would want to know what promises worked and which ones didnt if I were calling Promise.all() on a list of promises. I could then use this information to decide what to do next in a program.</p>
 
 <p>I kept playing with this a little and wanted to write something that would filter through the returned array for only promises that were resolved. Here is something I came up with. Not sure if this is correct, but it does work.</p>
-<pre><code class="language-Javascript">Promise.all([
-  fakePromise(1).then(
-  (val)=&gt; {return {resolved: true, val}},
-  (e) =&gt; {return {resolved: false, error: e}}
-  ),
-  fakePromise(2).then(
-    (val)=&gt; {return {resolved: true, val}},
-    (e) =&gt; {return {resolved: false, error: e}}
-  ),
-  fakePromise(3).then(
-    (val)=&gt; {return {resolved: true, val}},
-    (e) =&gt; {return {resolved: false, error: e}}),
-]).then(results =&gt; console.log(results.filter(promise =&gt; {return promise.resolved})))
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">val</span><span class="p">}},</span>
+  <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">e</span><span class="p">}}</span>
+  <span class="p">),</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span>
+    <span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">val</span><span class="p">}},</span>
+    <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">e</span><span class="p">}}</span>
+  <span class="p">),</span>
+  <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span>
+    <span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">val</span><span class="p">}},</span>
+    <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="p">{</span><span class="na">resolved</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="na">error</span><span class="p">:</span> <span class="nx">e</span><span class="p">}}),</span>
+<span class="p">]).</span><span class="nx">then</span><span class="p">(</span><span class="nx">results</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">promise</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="nx">promise</span><span class="p">.</span><span class="nx">resolved</span><span class="p">})))</span>
 
-// Promise { &lt;state&gt;: "pending" }
+<span class="c1">// Promise { &lt;state&gt;: "pending" }</span>
 
-// [
-// {resolved: true, val: 1 },
-// {resolved: true, val: 2}
-// ]
-</code></pre>
+<span class="c1">// [</span>
+<span class="c1">// {resolved: true, val: 1 },</span>
+<span class="c1">// {resolved: true, val: 2}</span>
+<span class="c1">// ]</span>
+</code></pre></div></div>
 
 <p>After these sections the book got a little lofty and used some examples that really threw me off course. This has happened every now and again in this book but I still enjoy it.</p>
 
@@ -233,17 +233,17 @@ tryPromise()
 <p>Inside of an async function you can use the word <code class="highlighter-rouge">await</code> in front of an expression to wait for a promise to resolve before moving onto the next line of code. Mimicking the functionality of a synchronous function, while remaining asynchronous.</p>
 
 <p>For basic code, is is smart to use <code class="highlighter-rouge">async/await</code> with promises as it leads to an easier to read and understand code.</p>
-<pre><code class="language-Javascript">var asyncExample = async () =&gt; {
-  try {
-    let fakeValue1 = await fakePromise(1);
-        console.log(fakeValue1)
-  } catch (e) {
-      console.log(e)
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">asyncExample</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">fakeValue1</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fakePromise</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fakeValue1</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+<span class="p">}</span>
 
-// if promise fulfills --&gt; 1
-// if it fails --&gt; 'Promise Didnt Work'
-</code></pre>
+<span class="c1">// if promise fulfills --&gt; 1</span>
+<span class="c1">// if it fails --&gt; 'Promise Didnt Work'</span>
+</code></pre></div></div>
 
 <p>For simple stuff, this seems a lot easier to read than using lots of .then and .catch statements. The ease of putting what you want to try to do in a try/catch is easier to understand in my opinion.</p>
 
@@ -267,7 +267,7 @@ tryPromise()
 <p>Back to promises…</p>
 
 <p>Asynchronous behavior happens on it’s own empty callback. Promises always resolve or reject as a new event on the async event stack.</p>
-<pre><code class="language-JavaScript">Promise.resolve("Done").then(console.log);
+<pre><code class="language-javaScript">Promise.resolve("Done").then(console.log);
 console.log("Me first!");
 // → Me first!
 // → Done

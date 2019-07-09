@@ -152,15 +152,15 @@
 
 <h4 id="callbacks">Callbacks</h4>
 <p>One approach to async programming is to make functions that perform a slow action take a callback argument to run when the code is finished working. (We learned about this in the NodeJS course we are currently working through.) As we learned previously, this can get convoluted quickly when wanting to perform more than one async operation. The example below has two callbacks. Any more and this could lead to hard to lots of nesting and hard to read code. IE.</p>
-<pre><code class="language-Javascript">import {bigOak} from "./crow-tech";
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">bigOak</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./crow-tech</span><span class="dl">"</span><span class="p">;</span>
 
-bigOak.readStorage("food caches", caches =&gt; { // first callback
-  let firstCache = caches[0];
-  bigOak.readStorage(firstCache, info =&gt; { // second nested callback
-    console.log(info);
-  });
-});
-</code></pre>
+<span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="dl">"</span><span class="s2">food caches</span><span class="dl">"</span><span class="p">,</span> <span class="nx">caches</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// first callback</span>
+  <span class="kd">let</span> <span class="nx">firstCache</span> <span class="o">=</span> <span class="nx">caches</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="nx">firstCache</span><span class="p">,</span> <span class="nx">info</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// second nested callback</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
 
 </p>
       

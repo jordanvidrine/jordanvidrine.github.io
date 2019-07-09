@@ -142,7 +142,244 @@
 <section id="posts">
   <h2 id="journal-title"> - Latest Journal Entries -</h2>
   <ul>
+    
+    <li>
+      <h3>July 9th 2019</h3>
+      <p><p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
 
+<h3 id="chapter-11-async---eloquent-javascript">Chapter 11 Async - Eloquent Javascript</h3>
+<p>The author has a sense of humor. We will be learning the ins and outs of async by writing networking functions for a fictitious crow colony that has learned how to use javascript and communicate from nest to nest by sending signals to and from each other…. interesting.</p>
+
+<h4 id="callbacks">Callbacks</h4>
+<p>One approach to async programming is to make functions that perform a slow action take a callback argument to run when the code is finished working. (We learned about this in the NodeJS course we are currently working through.) As we learned previously, this can get convoluted quickly when wanting to perform more than one async operation. The example below has two callbacks. Any more and this could lead to hard to lots of nesting and hard to read code. IE.</p>
+<pre><code class="language-Javascript">import {bigOak} from "./crow-tech";
+
+bigOak.readStorage("food caches", caches =&gt; { // first callback
+  let firstCache = caches[0];
+  bigOak.readStorage(firstCache, info =&gt; { // second nested callback
+    console.log(info);
+  });
+});
+</code></pre>
+
+<h4 id="promises">Promises</h4>
+<p>Here is where promises come in and are very handy! A Promise is an object that represents a future event and is used in place of a callback.</p>
+
+<blockquote>
+  <p>A promise is an asynchronous action that may complete at some point and produce a value. It is able to notify anyone who is interested when its value is available.</p>
+</blockquote>
+
+<p>The easiest way to call a promise is to call <code class="highlighter-rouge">Promise.resolve</code>. This function will ensure the value you give it will be wrapped in a promise that immediately finishes with the value you gave it as its result.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">promiseFive</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="nx">promiseFive</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">value</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Got </span><span class="p">${</span><span class="nx">value</span><span class="p">}</span><span class="s2">`</span><span class="p">))</span>
+<span class="c1">// Got 5</span>
+</code></pre></div></div>
+<p>To get the result of the promise, you call the <code class="highlighter-rouge">.then</code> method with a callback. This will register that callback to run when the promise is resolved. and produces a value.<br /> <br />
+<strong>Something I didnt know:</strong>
+You can call <code class="highlighter-rouge">.then</code> multiple times on a single promise, and they will be called, even if you add them after the promise has already resolved (finished).</p>
+<pre><code class="language-Javascript">let promiseWait = new Promise((resolve,reject) =&gt; {
+  setTimeout(() =&gt; {
+    resolve(5)
+  },10000)
+})
+
+promiseWait.then(val =&gt; console.log(`got ${val + 5}`))
+// after 10 seconds
+// got 10
+
+promiseWait.then(val =&gt; console.log(`got ${val + 10}`))
+// no waiting since promise is resolved with 5
+// got 15
+</code></pre>
+<p>This seems valuable to me because you can get data and store it in a variable as a promise. Once that promise resolves, you can use that same data on multiple other functions or calculations.</p>
+
+<p>If you use the return statement in a <code class="highlighter-rouge">.then</code> method, it will return another promise resolved with whatever functions or calculations you performed on it, or, if whatever you manipulate it with returns a promise, it returns a promise, waits for that to be resolved, and then resolves to its result.</p>
+<pre><code class="language-Javascript">let promiseWait = new Promise((resolve,reject) =&gt; {
+  setTimeout(()=&gt;{
+    resolve(15)
+  },10000)
+}).then(value =&gt; {
+    console.log(`Value = ${value} from first promise`)
+    return new Promise((resolve,reject) =&gt; {
+      setTimeout(() =&gt; {
+        resolve(value+5)
+      },5000)
+    })
+}).then(newVal =&gt; console.log(`Value = ${newVal} from second promise`))
+
+// After 10 seconds
+// Value = 15 from first promise
+// After 5 More seconds
+// Value = 20 from second promise
+</code></pre>
+<p>I like the following description from the book:</p>
+<blockquote>
+  <p>It is useful to think of promises as a device to move values into an asynchronous reality. A normal value is simply there. A promised value is a value that might already be there or might appear at some point in the future. Computations defined in terms of promises act on such wrapped values and are executed asynchronously as the values become available.</p>
+</blockquote>
+
+<h4 id="failure">Failure</h4>
+<p>Async programs need a failure option to check for any errors caused during the callback processes. With the callback method this is difficult and results in more lines of code and if/else statements to be used.</p>
+
+<p>With Promises though this becomes a great deal easier. They can either be resolved, or rejected. If resolved, the result is passed to the next <code class="highlighter-rouge">.then</code> method. If rejected however, all <code class="highlighter-rouge">.then</code> methods are ignored after the failure, and the promise will jump to the <code class="highlighter-rouge">.catch</code> method to handle the error. <code class="highlighter-rouge">.catch</code> Is very mich like <code class="highlighter-rouge">.then</code> in that it returns a new promise which resolves to the original promises value if it resolves normally, otherwise it resolves to the value of the <code class="highlighter-rouge">.catch</code> handler.</p>
+
+<p>As a shorthand, <code class="highlighter-rouge">.then</code> also accepts a rejection handler as a second argument, alongside the resolve function, which it can use to reject the new promise. Here is an example from the book of what a chain can look like.</p>
+<pre><code class="language-Javascript">new Promise((_, reject) =&gt; reject(new Error("Fail")))
+  .then(value =&gt; console.log("Handler 1"))
+  .catch(reason =&gt; {
+    console.log("Caught failure " + reason);
+    return "nothing";
+  })
+  .then(value =&gt; console.log("Handler 2", value));
+// → Caught failure Error: Fail
+// → Handler 2 nothing
+</code></pre>
+<p>What happens here is the promise immediately rejects, passing over the <code class="highlighter-rouge">.then</code> method and sending the <code class="highlighter-rouge">.catch</code> method an <code class="highlighter-rouge">Error("Fail")</code>. The <code class="highlighter-rouge">.catch</code> method logs this and its reason to the console and returns a value string of “Nothing”. When something is returned from a <code class="highlighter-rouge">.catch</code> or <code class="highlighter-rouge">.then</code> method, it is returned as a promise. Since this promise is resolved with the str of ‘nothing’ the next <code class="highlighter-rouge">.then</code> method can handle it. It then logs ‘Handler 2’ + the resolved promise value of ‘nothing’ to the console.</p>
+
+<p>Javascript can also detect when errors are not handled. If a promise is rejected without a call to <code class="highlighter-rouge">.catch</code> javascript will throw an error to the console.</p>
+
+<h4 id="importance-of-exception-handling">Importance of exception handling</h4>
+<p>It is also important to handle exceptions with Promises. What if the network is down, and our resolve or reject doesnt return anything? What if a function name was typed or misspelled? We should handle this issue with a <code class="highlighter-rouge">try / catch</code> statement.</p>
+<pre><code class="language-Javascript">promiseErrorTest = () =&gt; { return new Promise((resolve,reject) =&gt; {
+  let rndm = Math.floor(Math.random()*100)
+  setTimeout(() =&gt; {
+    if (rndm &gt; 50) {
+      resolve('Resolved Promise')
+    } else {
+      reject(new Error('Rejected!'))
+    }
+  }, 5000)
+})}
+
+tryPromise = () =&gt; {
+  try {
+    promiseErrorTest().then(val=&gt;console.log(val),
+                            rejection=&gt;console.log(rejection))
+  } catch (e) {
+    console.log(`Failure: ${e}`)
+  }
+}
+
+tryPromise()
+// wait 5 seconds then randomly resolve or rejects
+// 'Resolved Promise' or 'Error: Rejected!'
+
+// What if we misspelled promiseErrorTest in the tryPromise function?
+// The catch (e) part of the try catch statement will CATCH this issue and return
+// Failure: ReferenceError: promiseErrorTet is not defined
+</code></pre>
+
+<h4 id="collections-of-promises">Collections of Promises</h4>
+<p>When working with a collection of Promises running at the same time, the <code class="highlighter-rouge">Promise.all</code> function is very useful. It returns a promise that waits for all of the promises in an array to resolve and then resolves to an array of the values produced. If any promise is rejected, the result of Promise.all is itself rejected. Lets test this out. First, lets create a fake promise.</p>
+<pre><code class="language-Javascript">let fakePromise = (val) =&gt; {
+  return new Promise((resolve,reject) =&gt; {
+    setTimeout(()=&gt;{
+      let rndm = Math.floor(Math.random()*10)
+      if (rndm % 2 == 0) {
+        resolve(val)
+      }
+      reject('Promise Didnt Work')
+    },3000)
+  })
+}
+</code></pre>
+<p>Then, lets create a <code class="highlighter-rouge">Promise.all</code> call using a couple of the fake promises.</p>
+<pre><code class="language-Javascript">Promise.all([
+  fakePromise(1),
+  fakePromise(2),
+  fakePromise(3)
+]).then(results =&gt; console.log(results))
+
+// uncaught exception: Promise Didnt Work
+</code></pre>
+<p>Hmm. So it seems that the Promise.all ONLY returns when every single proimise is fulfilled. Although cool, it seems a little useless if we want to know what failed and what didnt. To help we can attach a catch statement to each fakePromise() call like so:</p>
+<pre><code class="language-Javascript">Promise.all([
+  fakePromise(1).catch(e =&gt; e),
+  fakePromise(2).catch(e =&gt; e),
+  fakePromise(3).catch(e =&gt; e)
+]).then(results =&gt; console.log(results))
+
+// Array(3) [ 1, "Promise Didnt Work", 3 ]
+</code></pre>
+<p>I feel like I would want to know what promises worked and which ones didnt if I were calling Promise.all() on a list of promises. I could then use this information to decide what to do next in a program.</p>
+
+<p>I kept playing with this a little and wanted to write something that would filter through the returned array for only promises that were resolved. Here is something I came up with. Not sure if this is correct, but it does work.</p>
+<pre><code class="language-Javascript">Promise.all([
+  fakePromise(1).then(
+  (val)=&gt; {return {resolved: true, val}},
+  (e) =&gt; {return {resolved: false, error: e}}
+  ),
+  fakePromise(2).then(
+    (val)=&gt; {return {resolved: true, val}},
+    (e) =&gt; {return {resolved: false, error: e}}
+  ),
+  fakePromise(3).then(
+    (val)=&gt; {return {resolved: true, val}},
+    (e) =&gt; {return {resolved: false, error: e}}),
+]).then(results =&gt; console.log(results.filter(promise =&gt; {return promise.resolved})))
+
+// Promise { &lt;state&gt;: "pending" }
+
+// [
+// {resolved: true, val: 1 },
+// {resolved: true, val: 2}
+// ]
+</code></pre>
+
+<p>After these sections the book got a little lofty and used some examples that really threw me off course. This has happened every now and again in this book but I still enjoy it.</p>
+
+<h4 id="async--await">Async / Await</h4>
+<p>Javascript allows us to use pseudo synchronous code to describe asynchronous functions. An <code class="highlighter-rouge">async</code> function is a function that implicitly returns a promise and that can, in its body, await other promises in a way that looks synchronous. An <code class="highlighter-rouge">async</code> function is marked by the word async before the function keyword. Methods can also be made async by writing <code class="highlighter-rouge">async</code> before their name.</p>
+
+<p>Inside of an async function you can use the word <code class="highlighter-rouge">await</code> in front of an expression to wait for a promise to resolve before moving onto the next line of code. Mimicking the functionality of a synchronous function, while remaining asynchronous.</p>
+
+<p>For basic code, is is smart to use <code class="highlighter-rouge">async/await</code> with promises as it leads to an easier to read and understand code.</p>
+<pre><code class="language-Javascript">var asyncExample = async () =&gt; {
+  try {
+    let fakeValue1 = await fakePromise(1);
+        console.log(fakeValue1)
+  } catch (e) {
+      console.log(e)
+}
+
+// if promise fulfills --&gt; 1
+// if it fails --&gt; 'Promise Didnt Work'
+</code></pre>
+
+<p>For simple stuff, this seems a lot easier to read than using lots of .then and .catch statements. The ease of putting what you want to try to do in a try/catch is easier to understand in my opinion.</p>
+
+<h4 id="generators">Generators</h4>
+
+<p>It is here the author also introduces Javascript’s Generator functions. We looked at something similar, the ‘Iterator’ back in chapter 6, but the Generator is much more straightforward and easy to digest. To make a function a Generator you add * to the function declaration like so. Each time the <code class="highlighter-rouge">.next()</code> method is called on the function, it runs through its code until it hits <code class="highlighter-rouge">yield</code> Here is an example <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#Generator_functions">from mdn website</a>:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="o">*</span> <span class="nx">makeRangeIterator</span><span class="p">(</span><span class="nx">start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">end</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">step</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">start</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">end</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="nx">step</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">yield</span> <span class="nx">i</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">example</span> <span class="o">=</span> <span class="nx">makeRangeIterator</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nx">example</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span> <span class="c1">// {value: 1, done: false}</span>
+<span class="nx">example</span><span class="p">.</span><span class="nx">next</span><span class="p">()</span> <span class="c1">// {valie: 2, done: false}</span>
+</code></pre></div></div>
+<p>Once yield is no longer reached, done is set to false and value will always be undefined.</p>
+
+<h4 id="the-event-loop">The Event Loop</h4>
+<p>Back to promises…</p>
+
+<p>Asynchronous behavior happens on it’s own empty callback. Promises always resolve or reject as a new event on the async event stack.</p>
+<pre><code class="language-JavaScript">Promise.resolve("Done").then(console.log);
+console.log("Me first!");
+// → Me first!
+// → Done
+</code></pre>
+
+<h3 id="summary">Summary</h3>
+
+<p>Whew! What a chapter. I’m glad I read through it and worked through a lot of the examples in chromes dev tools. This really solidified how Promises work. Especially Promise.all().</p>
+</p>
+      
+    </li>
+    
     <li>
       <h3>July 5th & 6th 2019</h3>
       <p><p>Spent a couple of hours yesterday and today implementing pagination onto my site and blog. I met with a professional programmer and he had some great suggestions for what my portfolio should showcase, as well as some input for the blog.</p>
@@ -150,44 +387,14 @@
 <h4 id="things-i-implemented-and-changed">Things I Implemented and Changed</h4>
 <p><strong>1.</strong> The blog now shows a max of 10 posts on a single page. Each post also has a tag that tells Jekyll where to put the “Read More…” link.<br /><br />
 <strong>2.</strong> The home page is now my project showcase, and at the bottom of the page, my latest 2 entries show up for anyone who is interested to read it.<br /><br />
-<strong>3.</strong> I uploaded everything to my domain at <a href="http://www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
+<strong>3.</strong> I uploaded everything to my domain at <a href="www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
 <strong>4.</strong> I removed my github pages ‘blog’ and that all now resides on the github page for jordanvidrine.github.io<br /><br /></p>
 
 <p>After making edits, I use the <code class="highlighter-rouge">bundle exec jekyll build</code> command to build the site into normal html, css, and javascript files. I then upload that to both my github page, as well as my domain. I really like the consistency of my new site now and am pleased with the blogging functionality I put into it.</p>
 </p>
-
+      
     </li>
-
-    <li>
-      <h3>July 3rd 2019</h3>
-      <p><p>Spent the first couple of hours of my day trying to integrate pagination into this blog. It turned out very frustrating and uneventful because github pages does not support the newest jekyll pagination gem. I couldn’t for the life of me get the v1 of their gem to work either. I’ll have to look into that in some free time. Onto my node course!</p>
-
-<h4 id="user-password-hashing-using-bcrpyt">User Password Hashing using bcrpyt</h4>
-<p>We will use bcrpyt in our task-manager app (the one I’ve been creating in this course) to save hashed versions of user passwords, as opposed to the literal password string. The following code will use bcrpyt.hash() to do this.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">bcrpyt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">bcryptjs</span><span class="dl">'</span><span class="p">)</span>
-
-<span class="kd">const</span> <span class="nx">myFunction</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">password</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Red12345!</span><span class="dl">'</span>
-<span class="c1">// hash() accepts the string to hash, and a number of rounds to run the hash</span>
-<span class="c1">// algorithm. 8 is the value recommended from the original creator of the</span>
-<span class="c1">// bcrypt algorithm</span>
-  <span class="kd">const</span> <span class="nx">hashedPassword</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hashedPassword</span><span class="p">)</span>
-
-
-<span class="p">}</span>
-
-<span class="nx">myFunction</span><span class="p">()</span>
-
-</code></pre></div></div>
-
-</p>
-
-      <a href="/2019/07/July-3rd-2019.html">Read More...</a>
-
-    </li>
-
+    
   </ul>
 <footer>
 <p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>

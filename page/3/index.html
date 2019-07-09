@@ -144,6 +144,27 @@
   <ul>
     
     <li>
+      <h3>July 1st 2019</h3>
+      <p><p>I have decided to reformat most if not all journal entries from today foward to act more like a note taking platform and a more detailed description of what I am learning. I will be updating throughout my day, rather than at the end of the day.</p>
+
+<p>This morning I went through a couple more hours of the Node.js course, and dove into MongoDB and how to get mongodb up and running in a node application and how to perform CRUD operations. I also learned how to utilize Promises, rather than proving a callback to each method, which makes things a lot less convoluted and easier to understand.</p>
+
+<p>For example purposes lets pretend all of the following code is nested inside of the following call to MongoClient.connect The calls to console in the Then and Catch statements are for debugging purposes only.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">MongoClient</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">connectionURL</span><span class="p">,</span> <span class="p">{</span><span class="na">useNewUrlParser</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to connect to database!</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">db</span><span class="p">(</span><span class="nx">databaseName</span><span class="p">)</span>
+</code></pre></div></div>
+
+</p>
+      
+      <a href="/2019/07/July-1st-2019.html">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h3>June 28th 2019</h3>
       <p><p>Today was a short one coding wise. Looked over the horoku/git commands to run and pull/push the apps I’ve been working on to another computer.</p>
 
@@ -151,17 +172,6 @@
 
 <h4 id="and-heres-what-it-looks-like">And here’s what it looks like</h4>
 <p><img src="https://i.postimg.cc/YSB1TTYC/stock.jpg" alt="Stock App Preview" /></p>
-</p>
-      
-    </li>
-    
-    <li>
-      <h3>June 26th 2019</h3>
-      <p><p>Learned A LOT today. Worked with the very begginings of databases with MongoDB in the node course I am taking. I think learning mongo is going to be fun and allow me to create a lot cooler apps for my portfolio.</p>
-
-<p>Also learned how to deploy an app to Heroku and have a working app with node on the back end ready to use and test and ship out. I also finished my stock app and pushed that to heroku today. It can be seen here: <a href="https://jbv-stock-app.herokuapp.com/">Stock App</a></p>
-
-<p>I didn’t encounter any issues today that would call for me adding the code to todays update. Overall good day!</p>
 </p>
       
     </li>

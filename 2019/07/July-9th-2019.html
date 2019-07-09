@@ -1,13 +1,12 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-      <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title></title>
-    <link rel="stylesheet" href="/assets/css/blog-styles.css">
+    <title>Jordan Vidrine Coding Journal - July 9th 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
     <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
-  </head>
   </head>
   <body>
     <div id='title-nav'>
@@ -34,6 +33,7 @@
       <div id='bio'>
               <img src="https://media.licdn.com/dms/image/C5603AQGuQnyqi_WYSQ/profile-displayphoto-shrink_200_200/0?e=1565827200&v=beta&t=LY5mk_3gumx40ZQP2FBSoKf_8xTb4SKGF7P0KFJkIW4">
         <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
         <p>
           An experienced business owner + musician with a demonstrated history of management in the
           Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
@@ -42,11 +42,9 @@
       </div>
     </div>
     <div id="posts">
-  <ul>
-    
-    <li>
-      <h2>July 9th 2019</h2>
-      <p><p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
+    <div id="content">
+    <h2>July 9th 2019</h2>
+    <p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
 
 <h3 id="chapter-11-async---eloquent-javascript">Chapter 11 Async - Eloquent Javascript</h3>
 <p>The author has a sense of humor. We will be learning the ins and outs of async by writing networking functions for a fictitious crow colony that has learned how to use javascript and communicate from nest to nest by sending signals to and from each other…. interesting.</p>
@@ -277,210 +275,15 @@ console.log("Me first!");
 <h3 id="summary">Summary</h3>
 
 <p>Whew! What a chapter. I’m glad I read through it and worked through a lot of the examples in chromes dev tools. This really solidified how Promises work. Especially Promise.all().</p>
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>July 5th & 6th 2019</h2>
-      <p><p>Spent a couple of hours yesterday and today implementing pagination onto my site and blog. I met with a professional programmer and he had some great suggestions for what my portfolio should showcase, as well as some input for the blog.</p>
 
-<h4 id="things-i-implemented-and-changed">Things I Implemented and Changed</h4>
-<p><strong>1.</strong> The blog now shows a max of 10 posts on a single page. Each post also has a tag that tells Jekyll where to put the “Read More…” link.<br /><br />
-<strong>2.</strong> The home page is now my project showcase, and at the bottom of the page, my latest 2 entries show up for anyone who is interested to read it.<br /><br />
-<strong>3.</strong> I uploaded everything to my domain at <a href="www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
-<strong>4.</strong> I removed my github pages ‘blog’ and that all now resides on the github page for jordanvidrine.github.io<br /><br /></p>
-
-<p>After making edits, I use the <code class="highlighter-rouge">bundle exec jekyll build</code> command to build the site into normal html, css, and javascript files. I then upload that to both my github page, as well as my domain. I really like the consistency of my new site now and am pleased with the blogging functionality I put into it.</p>
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>July 3rd 2019</h2>
-      <p><p>Spent the first couple of hours of my day trying to integrate pagination into this blog. It turned out very frustrating and uneventful because github pages does not support the newest jekyll pagination gem. I couldn’t for the life of me get the v1 of their gem to work either. I’ll have to look into that in some free time. Onto my node course!</p>
-
-<h4 id="user-password-hashing-using-bcrpyt">User Password Hashing using bcrpyt</h4>
-<p>We will use bcrpyt in our task-manager app (the one I’ve been creating in this course) to save hashed versions of user passwords, as opposed to the literal password string. The following code will use bcrpyt.hash() to do this.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">bcrpyt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">bcryptjs</span><span class="dl">'</span><span class="p">)</span>
-
-<span class="kd">const</span> <span class="nx">myFunction</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">password</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Red12345!</span><span class="dl">'</span>
-<span class="c1">// hash() accepts the string to hash, and a number of rounds to run the hash</span>
-<span class="c1">// algorithm. 8 is the value recommended from the original creator of the</span>
-<span class="c1">// bcrypt algorithm</span>
-  <span class="kd">const</span> <span class="nx">hashedPassword</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hashedPassword</span><span class="p">)</span>
-
-
-<span class="p">}</span>
-
-<span class="nx">myFunction</span><span class="p">()</span>
-
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-3rd-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 2nd 2019</h2>
-      <p><h4 id="promise-chaining">Promise Chaining</h4>
-<p>I’ve worked with basic promises with the past couple of exercises in the Node.js course. What if we wanted to to multiple tasks, after each step of operating with the Promise returned. Ie. First get a lat,long from a geocoding API, then use that data to get weather info; or mark a task as complete, then get the total number of incomplete tasks left to do.</p>
-
-<p>Here is where Promise Chaining comes into play.</p>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c1">// Here is an example of a basic Promise that will always return the sum after 2 seconds. An error is</span>
-<span class="c1">// not programmed to take place.</span>
-<span class="kd">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">resolve</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">)</span>
-    <span class="p">},</span><span class="mi">2000</span><span class="p">)</span>
-  <span class="p">})</span>
-<span class="p">}</span>
-
-<span class="c1">// What if you want to perform more asynchronous actions after receiving the resolved promise? One way</span>
-<span class="c1">// (a bad way) is to nest more calls to the Promise inside of the returned resolution as such. This</span>
-<span class="c1">// will QUICKLY get confusing and convoluted so it is not a good idea</span>
-<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
-
-  <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span><span class="mi">5</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
-  <span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-  <span class="p">})</span>
-
-<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-<span class="p">})</span>
-
-<span class="c1">// Promise Chaining</span>
-<span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
-  <span class="c1">// return a call to add, this will send the returned value to the next chained .then() method</span>
-  <span class="k">return</span> <span class="nx">add</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">sum2</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum2</span><span class="p">)</span>
-  <span class="c1">// this one call to .catch() will apply to any error that happens in the chain</span>
-<span class="p">}).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-2nd-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 1st 2019</h2>
-      <p><p>I have decided to reformat most if not all journal entries from today foward to act more like a note taking platform and a more detailed description of what I am learning. I will be updating throughout my day, rather than at the end of the day.</p>
-
-<p>This morning I went through a couple more hours of the Node.js course, and dove into MongoDB and how to get mongodb up and running in a node application and how to perform CRUD operations. I also learned how to utilize Promises, rather than proving a callback to each method, which makes things a lot less convoluted and easier to understand.</p>
-
-<p>For example purposes lets pretend all of the following code is nested inside of the following call to MongoClient.connect The calls to console in the Then and Catch statements are for debugging purposes only.</p>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">MongoClient</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">connectionURL</span><span class="p">,</span> <span class="p">{</span><span class="na">useNewUrlParser</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to connect to database!</span><span class="dl">'</span><span class="p">)</span>
-  <span class="p">}</span>
-  <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">db</span><span class="p">(</span><span class="nx">databaseName</span><span class="p">)</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-1st-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>June 28th 2019</h2>
-      <p><p>Today was a short one coding wise. Looked over the horoku/git commands to run and pull/push the apps I’ve been working on to another computer.</p>
-
-<p>I styled the my Stock Charting app for mobile use and implemented responsive styling for the Chart.js app that I seemed to look over when designing it earlier this week. I love how it turned out. Take a look at it <a href="https://jbv-stock-app.herokuapp.com/">here</a></p>
-
-<h4 id="and-heres-what-it-looks-like">And here’s what it looks like</h4>
-<p><img src="https://i.postimg.cc/YSB1TTYC/stock.jpg" alt="Stock App Preview" /></p>
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>June 26th 2019</h2>
-      <p><p>Learned A LOT today. Worked with the very begginings of databases with MongoDB in the node course I am taking. I think learning mongo is going to be fun and allow me to create a lot cooler apps for my portfolio.</p>
-
-<p>Also learned how to deploy an app to Heroku and have a working app with node on the back end ready to use and test and ship out. I also finished my stock app and pushed that to heroku today. It can be seen here: <a href="https://jbv-stock-app.herokuapp.com/">Stock App</a></p>
-
-<p>I didn’t encounter any issues today that would call for me adding the code to todays update. Overall good day!</p>
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>June 25th 2019</h2>
-      <p><p>Continued my node/express work. I continued progress and created a ‘stock’ app. I used chart.js to render the stock data (for the past month) to the page. I plan on integrating 5 options (1 day, 1 week, 1 month, 3 months, YTD, and one year) for the user to choose to see.</p>
-
-<h4 id="here-is-a-screenshot-of-what-i-worked-on">Here is a screenshot of what I worked on:</h4>
-<p><img src="https://i.postimg.cc/yNxz4ZQH/stocks-app-example.png" alt="Stock App Example" /></p>
-
-</p>
-      
-      <a id='read-more' href="/2019/06/June-25th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>June 24th 2019</h2>
-      <p><p>Started the day working on the second 100 days of css challenge and completed it. It took about an hour, but I really feel like I am already getting used to the css animations syntax. Got to play around with the clip path CSS as well which was fun. Here is the solution:</p>
-
-<p class="codepen" data-height="350" data-theme-id="light" data-default-tab="result" data-user="jordanvidrine" data-slug-hash="QXgNzj" data-preview="true" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="100 Dats of CSS #2">
-  <span>See the Pen <a href="https://codepen.io/jordanvidrine/pen/QXgNzj/">
-  100 Dats of CSS #2</a> by Jordan Vidrine (<a href="https://codepen.io/jordanvidrine">@jordanvidrine</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async="" src="https://static.codepen.io/assets/embed/ei.js"></script>
-
-</p>
-      
-      <a id='read-more' href="/2019/06/June-24th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>June 21st 2019</h2>
-      <p><p>Today I migrated my coding journey repository of .MD files to a github page using jekyll. It really wasnt too complicated after reading the docs and following the walkthrough to how it works.</p>
-
-<p>I’ve been wanting to implement the blogging functionality to my coding log and am glad to be able to finally do it. I can now update my log from any of my computers using the git features in atom.</p>
-
-<p>I had to install ruby on my desktop computer and I implemented the use of ROUGE which is a really nice syntax highlighter. I also styled the blog page pretty simply.</p>
-
-<p>Take a look at it <a href="https://jordanvidrine.github.io/blog">here</a></p>
-</p>
-      
-    </li>
-    
-  </ul>
-  
-  <div id='pagination'>
-  
-  
-    <a id ='older' href="/blog/page/2/">Older Posts ></a>
-  
+    <a id='back' href="/blog/index.html">Back to blog...</a>
   </div>
-  
-  <footer>
+    </div>
+    <footer>
 <p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
 </footer>
 </section>
 
-</div>
 
   </body>
 </html>

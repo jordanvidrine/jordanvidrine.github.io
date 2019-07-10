@@ -64,6 +64,7 @@
   <span class="c1">// the third piece is the signature</span>
 
 </code></pre></div></div>
+<!--more-->
 <p>The goal of a json web token isnt to hide the data we provide. The whole point is to create data that is verifiable via the signature.</p>
 
 <p>Whats going on behind the scenes is this. Lets copy the middle part of the token provided to us and ‘decode’ it at <a href="https://www.base64decode.org/">base64decode.org</a> - we get this back: <code class="highlighter-rouge">{"_id":"abcd1234","iat":1562776753}</code> The “iat” is the timestamp at which the jwt was created.</p>

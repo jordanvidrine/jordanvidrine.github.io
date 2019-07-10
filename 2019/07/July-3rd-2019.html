@@ -113,9 +113,36 @@
 <p>The first thing we need to do is add a post route for a user to send their email and password to the DB to check if those things are correct. We will create a method on the User model to do this. We can do this in the User model js file after we define the user like so:</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// adds the method to the User model</span>
 <span class="nx">userSchema</span><span class="p">.</span><span class="nx">statics</span><span class="p">.</span><span class="nx">findByCredentials</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="c1">// code goes here</span>
+  <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">email</span> <span class="p">})</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to login</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">isMatch</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">password</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isMatch</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to login</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">user</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<p>We will call that function from our route like so, and ALSO add the ‘unique:true’ option to our Email area in the UserSchema, not allowing multiple users to have the same email</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//get user from Email</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/login</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findByCredentials</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">password</span><span class="p">)</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h4 id="setting-up-authentication">Setting up authentication</h4>
+<p>We want to have most of the routes be private. We do not want people who are not logged in to be able to create tasks and edit tasks, especially ones not their own. The only public routes should be logging in and creating a new user.</p>
+
+<p>To do this, we need to setup the login request to send back an authentication token. It will allow the user to use that token to accomplish tasks that need to be authenticated. We will use the <a href="https://www.npmjs.com/package/jsonwebtoken">JSON web token</a> (JWT) to do this.</p>
+
+<p>Stopped my learning with this last lesson. I finished the day reading Eloquent Javascript chapters on Modules and Asynchronus programming. Going to re - read the async portion and work through the exercises.</p>
 
     <a id='back' href="/blog/index.html">Back to blog...</a>
   </div>

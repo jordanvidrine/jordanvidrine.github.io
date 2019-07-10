@@ -45,6 +45,219 @@
   <ul>
     
     <li>
+      <h2>July 10th 2019</h2>
+      <p><p>Since it’s been a couple of days since I last worked through more of the NodeJS course. I’m starting the morning off by reviewing the last hour or so of videos. Running through bcrypt password hashing usage, mongoose model middelware to run before saving anything to the database, and json web tokens.</p>
+
+<h4 id="json-web-tokens-jwt">Json Web Tokens (jwt)</h4>
+<p>Every express route we define will fall into either a ‘public’ or ‘private’ category. It will either be accessible to anyone, or sit behind authentication, and users would have to be authed to use it.</p>
+
+<p>Our signup and login route will be the only public routes available to the user. We dont want users deleting OTHER users tasks or updating things of the sort. To do this, we will implement authentication with Json web tokens.</p>
+
+<p>We will be using the <a href="https://www.npmjs.com/package/jsonwebtoken">jsonwebtoken</a> npm library to do all of this. Heres what a super simple implemenation could look like.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">myFunction</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span><span class="na">_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">abcd1234</span><span class="dl">'</span><span class="p">},</span> <span class="dl">'</span><span class="s1">secretsignature</span><span class="dl">'</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span>
+  <span class="c1">// eyJhbGciOiJIUzI1NiIsInR5cCI6Ik.... more really long token data</span>
+  <span class="c1">// the token comes back as 3 chunks of data separated by periods.</span>
+  <span class="c1">// the first piece is a base64 json string header with meta info</span>
+  <span class="c1">// the second piece is the payload/body containing the data provided {_id: 'abcd1234'}</span>
+  <span class="c1">// the third piece is the signature</span>
+
+</code></pre></div></div>
+<p>The goal of a json web token isnt to hide the data we provide. The whole point is to create data that is verifiable via the signature.</p>
+
+<p>Whats going on behind the scenes is this. Lets copy the middle part of the token provided to us and ‘decode’ it at <a href="https://www.base64decode.org/">base64decode.org</a> - we get this back: <code class="highlighter-rouge">{"_id":"abcd1234","iat":1562776753}</code> The “iat” is the timestamp at which the jwt was created.</p>
+
+<h4 id="verifying-the-tokens">Verifying the tokens</h4>
+
+<p>We can use the <code class="highlighter-rouge">.verify()</code> that the package gives us to verify a token:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// .verify() takes the token to verify, and the secret string used to create that token as arguments</span>
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="dl">'</span><span class="s1">mysecretstring</span><span class="dl">'</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+
+<span class="c1">// {"_id":"abcd1234","iat":1562776753}</span>
+</code></pre></div></div>
+<p>We can also set expiration by providing a third argument to the <code class="highlighter-rouge">.sign()</code> method like so:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span><span class="na">_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">abcd1234</span><span class="dl">'</span><span class="p">},</span> <span class="dl">'</span><span class="s1">secretsignature</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span><span class="na">expiresIn</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1h</span><span class="dl">'</span><span class="p">})</span>
+</code></pre></div></div>
+
+<p>This would set the token to expire in one hour, effectively logging the user out after one hour.</p>
+
+<h4 id="logging-inspect">Logging inspect</h4>
+<p>We will now use jwt to create a token to send to the user when signing up, or when logging into the site. Each request will send the user jwt tokens. We will write a re-usable function that different handlers can use whenever we need to generate a token.</p>
+
+<p>We will store this on <code class="highlighter-rouge">userSchema.methods</code> as opposed to <code class="highlighter-rouge">userSchema.statics</code>  which will give each user instance the function we can use. Static methods are accessible on the Model as a whole, but regular methods are accessible on instances of that model.</p>
+
+<p>Lets first create that method.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">userSchema</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">generateAuthToken</span> <span class="o">=</span> <span class="k">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="c1">// jwt expects a string in the payload object you pass to it, so we use .toString() to do that.</span>
+  <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span><span class="na">_id</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="p">},</span><span class="dl">'</span><span class="s1">thisismysecretsentence</span><span class="dl">'</span><span class="p">)</span>
+  <span class="k">return</span> <span class="nx">token</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Next, lets change the users/login route to call this function and add that to what we send to the user.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/login</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findByCredentials</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">password</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">user</span><span class="p">.</span><span class="nx">generateAuthToken</span><span class="p">()</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">token</span><span class="p">})</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>Great! It worked. Now when we send a request to /users/login with the correct body info filled out we get this back. (I am using postman for all of my http requests)</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">...data</span><span class="w"> </span><span class="err">here</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"token"</span><span class="p">:</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">here</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>At this point we provide the auth token to the client for them to use on any request that requires it. We are not keeping track of this currently on the server. The server generates it and then sends it back. Right now users cant truly log out while the token exists. We can fix this by tracking tokens we generate for users. It will allow them to log in on multiple devices, with each token tracked to that login/logout.</p>
+
+<p>We will store all of the auth tokens created for a user in the user document. To do this, we only have to add a little code to the User Schema, as well as the .generateAuthToken method we just created.</p>
+
+<p>To the Schema we add:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// this allow us to create an array of objects on the user. Each object will contain a token that will be a string.</span>
+<span class="nx">tokens</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="na">token</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="na">required</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}]</span>
+</code></pre></div></div>
+<p>To the .generateAuthToken method we add the following before the return call:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">concat</span><span class="p">({</span> <span class="nx">token</span> <span class="p">});</span>
+<span class="k">await</span> <span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+</code></pre></div></div>
+<p>This will concatenate the current token inside of an object to the current array of objects with tokens. Now our returned json.body looks like this when posting to users/login</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">user</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">age</span><span class="dl">"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">_id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">5d1d0f94316a5340744f4d9a</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Jordan</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">email</span><span class="dl">"</span><span class="p">:</span> <span class="c1">// email data</span>
+        <span class="dl">"</span><span class="s2">password</span><span class="dl">"</span><span class="p">:</span> <span class="c1">// password data</span>
+        <span class="dl">"</span><span class="s2">__v</span><span class="dl">"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tokens</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">_id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">5d261de27254e010f8799f8e</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">token</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDFkMGY5NDMxNmE1MzQwNzQ0ZjRkOWEiLCJpYXQiOjE1NjI3NzkxMDZ9.WDxucPGY_7HVyl8fLgmvAC2MUIW9qxkPTPsGwLRtAQM</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="dl">"</span><span class="s2">token</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDFkMGY5NDMxNmE1MzQwNzQ0ZjRkOWEiLCJpYXQiOjE1NjI3NzkxNzR9.mEkkXpWvND1V0lfsm2TuKoBP5YxArNqA4OlwSKKqGOE</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now we will move onto authenticating users and having them be able to only do certain things depending on their auth. We will do this with express middleware on certain routes. Here is a simple example of something we can use middleware to do (we put this above our routes in our index.js file):</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">GET</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET requests are currently under construction!</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">next</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>The code above will intercept all http requests and first check if it is a GET method. If so, it will send to the user that GET requests are currently being worked on. All other methods will be run as normal, moving onto the next function by calling <code class="highlighter-rouge">next()</code>.</p>
+
+<p>This type of functionality will be how we use authentication. When creating middleware to use on our site it is normal to store your middleware functions in a folder src/middleware. We will create a file there called auth.js and load it into our routers.</p>
+
+<p>We will use middleware for only certain routes. To add middleware to only certain routes, you pass the function to use as middleware as your second argument. In between the route, and the callback that route will run. DONT FORGET TO CALL NEXT() in the middleware function.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users</span><span class="dl">'</span><span class="p">,</span> <span class="nx">middelwareFunc</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// code here...</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>The user will be able to be authenticated by sending the latest auth key they recieved to the server via GET method and headers. For learning purposes we will setup for a user to send a GET request to users/me and be returned their on info. We will accomplish this by adding an Authorization header with ‘Bearer **token’ -  We will do this like so:</p>
+<h5 id="authjs">auth.js</h5>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../models/user</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">auth</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">header</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">Bearer </span><span class="dl">'</span><span class="p">,</span><span class="dl">''</span><span class="p">)</span>
+
+    <span class="c1">// if verified decoded should look lik {_id: ....., iat: .....}</span>
+    <span class="kd">const</span> <span class="nx">decoded</span> <span class="o">=</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="dl">'</span><span class="s1">thisismysecretsentence</span><span class="dl">'</span><span class="p">)</span>
+
+    <span class="c1">// this will look for a user with the ID that also has the token in their array of tokens</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="na">_id</span><span class="p">:</span> <span class="nx">decoded</span><span class="p">.</span><span class="nx">_id</span><span class="p">,</span> <span class="dl">'</span><span class="s1">tokens.token</span><span class="dl">'</span><span class="p">:</span> <span class="nx">token</span> <span class="p">})</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// store the returned user to the req object so the next part of the express functions will not have to look it up again</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">user</span>
+    <span class="nx">next</span><span class="p">()</span>
+
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">401</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Please Authenticate.</span><span class="dl">'</span><span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">auth</span>
+</code></pre></div></div>
+<h5 id="in-the-user-routes">in the user routes</h5>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// get user profile</span>
+<span class="nx">router</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span> <span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Adding this returns the users data to them, if they are currently logged in. We do this by checking if the key the browsers sends to the server is still in the tokens array and active.</p>
+
+<h3 id="next-tasks">Next Tasks</h3>
+<p>After spending the morning working through all of this I then created my own versisons of what we did in the tutorials. I created a login page and saved users to a mongodb database using postman, sending user info in the body of my requests to create multiple users.</p>
+
+<p>I then created a ‘log in’ page and added the functionality for a user to submit their username and password. This sends a fetch request to a custom route I setup using express and returns the user’s data and a new token to them if the user name and password were correct.</p>
+
+<p>Here is some of that code from the front end.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">userName</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">username</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">submit</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">submit</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">let</span> <span class="nx">errorText</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByClassName</span><span class="p">(</span><span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="kd">var</span> <span class="nx">token</span><span class="p">;</span>
+
+<span class="nx">submit</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000/login/user</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Accept</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">body</span><span class="p">:</span>
+      <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">userName</span><span class="p">:</span> <span class="nx">userName</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span>
+        <span class="na">password</span><span class="p">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">password</span><span class="dl">'</span><span class="p">).</span><span class="nx">value</span>
+      <span class="p">})</span>
+  <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="k">async</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">errorText</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="dl">''</span><span class="p">;</span>
+        <span class="nx">errorText</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="dl">'</span><span class="s1">error-animate</span><span class="dl">'</span><span class="p">)</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+        <span class="kd">let</span> <span class="p">{</span><span class="na">_id</span><span class="p">:</span><span class="nx">id</span><span class="p">,</span> <span class="na">userName</span><span class="p">:</span><span class="nx">user</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">user</span>
+        <span class="nx">token</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">token</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span>
+        <span class="c1">//userName.value = ''</span>
+        <span class="c1">//document.getElementById('password').value = ''</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to log in</span><span class="dl">'</span><span class="p">)</span>
+        <span class="nx">errorText</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Unable to log in.</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">errorText</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">error-animate</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+</p>
+      
+    </li>
+    
+    <li>
       <h2>July 9th 2019</h2>
       <p><p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
 
@@ -238,19 +451,6 @@
 </p>
       
       <a id='read-more' href="/2019/06/June-24th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>June 21st 2019</h2>
-      <p><p>Today I migrated my coding journey repository of .MD files to a github page using jekyll. It really wasnt too complicated after reading the docs and following the walkthrough to how it works.</p>
-
-<p>I’ve been wanting to implement the blogging functionality to my coding log and am glad to be able to finally do it. I can now update my log from any of my computers using the git features in atom.</p>
-
-<p>I had to install ruby on my desktop computer and I implemented the use of ROUGE which is a really nice syntax highlighter. I also styled the blog page pretty simply.</p>
-
-<p>Take a look at it <a href="https://jordanvidrine.github.io/blog">here</a></p>
-</p>
       
     </li>
     

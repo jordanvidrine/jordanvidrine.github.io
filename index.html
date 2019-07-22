@@ -144,6 +144,20 @@
   <ul>
     
     <li>
+      <h3>July 22nd 2019</h3>
+      <p><p>Got back from vacation last night FULLY relaxed and ready to get back into the daily grind. While on the trip I put in an hour or two here and there working through codewars.com exercises and puzzles. Fun stuff.</p>
+
+<p>This morning I started the day off with rehashing what I learned on my last coding day. I also implemented a couple of new features into the site I am working on.</p>
+
+<p>I added an admin panel that shows me what ‘items’ users have submitted. It then shows me if they are approved or unapproved, as well as gives me the ability to delete any item. This is VERY similar to MANY todolist tutorials and I can see why those tutorials are so important. Basically everything on the web is a TODO list type item.</p>
+
+</p>
+      
+      <a href="/2019/07/July-22nd-2019.html">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h3>July 14th & 15th 2019</h3>
       <p><p>I spent yesterday and this morning getting deeper with working with MongoDB. I really enjoy using mongoose.js to interface with the mongo database as well. I spent time implementing my own CRUD operations, sending get and post requests to my own express app on the backend.</p>
 
@@ -156,37 +170,6 @@
 </p>
       
       <a href="/2019/07/July-14th-&-15th-2019.html">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h3>July 13th 2019</h3>
-      <p><p>So Hurricane Barry is making its way to land. Im posted up at my parents house in case the power back home goes out. I’ve been reading a bit of SICP which apparently is a computer programmer’s/CS Major’s dream book. I’ve also been going through MIT lectures on the book and I find it very interesting.</p>
-
-<p>The language it will be focused on is a dialect of Lisp called Scheme. This all comes recommended to my by a friend who’s has his degree in CS. I think it’s a good reccomendation as the book is going through the basic building blocks of what programs are, of what interpreters are, and what is actually going on behind the scenes when we write programs. I love this type of stuff, taking it all apart is so interesting to me.</p>
-
-<p>Anyway! That being said, I felt it necessary to also go back to the Regex section of Eloquent Javascript. Why? Because in it is a section on writing a parsing function that interprets an INI file using regex statements. Here is the example the book gives.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseINI</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Start with an object to hold the top-level fields</span>
-  <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">{};</span>
-  <span class="kd">let</span> <span class="nx">section</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>
-  <span class="nx">string</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="sr">/</span><span class="se">\r?\n</span><span class="sr">/</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">line</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">match</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">match</span> <span class="o">=</span> <span class="nx">line</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">(\w</span><span class="sr">+</span><span class="se">)</span><span class="sr">=</span><span class="se">(</span><span class="sr">.*</span><span class="se">)</span><span class="sr">$/</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">section</span><span class="p">[</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">match</span> <span class="o">=</span> <span class="nx">line</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">\[(</span><span class="sr">.*</span><span class="se">)\]</span><span class="sr">$/</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">section</span> <span class="o">=</span> <span class="nx">result</span><span class="p">[</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{};</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/^</span><span class="se">\s</span><span class="sr">*</span><span class="se">(</span><span class="sr">;.*</span><span class="se">)?</span><span class="sr">$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">line</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">"</span><span class="s2">Line '</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">line</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">' is not valid.</span><span class="dl">"</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">});</span>
-  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a href="/2019/07/July-13th-2019.html">Read More...</a>
       
     </li>
     

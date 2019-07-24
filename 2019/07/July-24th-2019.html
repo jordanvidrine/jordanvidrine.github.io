@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - July 24th 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="https://media.licdn.com/dms/image/C5603AQGuQnyqi_WYSQ/profile-displayphoto-shrink_200_200/0?e=1565827200&v=beta&t=LY5mk_3gumx40ZQP2FBSoKf_8xTb4SKGF7P0KFJkIW4">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>July 24th 2019</h2>
+    <p>Today I will be going back to the NodeJS course as I feel like I have been able to implement everything I’ve learned thus far on my own with the Drawing App.</p>
+
+<h4 id="logging-out">Logging Out</h4>
+<p>Below we setup a route to log a user out. This simply authenticates the user using an auth middleware we wrote previously. Once the user is authenticated, it checks the users list of active tokens and removes the one currently saved to the req method, which was saved there during their authentication.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/logout</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">token</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span> <span class="o">!==</span> <span class="nx">req</span><span class="p">.</span><span class="nx">token</span>
+    <span class="p">})</span>
+
+    <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>To ‘Log Out from All Locations’ we simply remove ALL of the tokens from the token array stored in the User object, rather than the only ‘active’ one. We can do this by setting the user’s tokens to an empty array like so. <code class="highlighter-rouge">req.user.tokens = []</code>
+<!--more--></p>
+
+<h4 id="hiding-private-data">Hiding Private Data</h4>
+<p>In a real life situation, when a user logs in, we dont want to send to them ALL of their data. It could lead to exposure of their hashed password as well as other sensitive information. Express makes this easy for us.</p>
+
+<p>We need to add a function to the method <code class="highlighter-rouge">.toJSON</code>. When we do this, any time Express SENDS information to a user, it will be first passed through the function stored at <code class="highlighter-rouge">.toJSON</code> of the User Model. For instance, anytime we want User data returned, we want to remove certain elements from that data. Here is how we did that: (you also need to make sure you are using express.json() like so ```app.use(express.json()))</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">userSchema</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">toJSON</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">userObject</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nx">toObject</span><span class="p">();</span>
+
+  <span class="k">delete</span> <span class="nx">userObject</span><span class="p">.</span><span class="nx">password</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="nx">userObject</span><span class="p">.</span><span class="nx">tokens</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">userObject</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="adding-authentication-to-more-user-routes">Adding Authentication to more user routes</h4>
+<p>We want to make sure we user authentication for all tasks. This reminds me that I need to implement this into my drawing app for myself as an admin. Right now, I have an admin panel that I need to be authenticated for, which works great. However, for the delete and approve functions of my Drawing app, I dont use authentication once I am logged into that admin panel. Since my tokens are set to expire after an hour, I can theoretically still use that section of the site as long as I dont refresh my browser. If I however, add authentication to the delete and approve routes, I will need to be authenticated any time I try and perform any manipulation on that data.</p>
+
+<h4 id="deleting-a-user--updating-a-user">Deleting a User &amp; Updating a User</h4>
+<p>To delete a user is fairly simple for this application. Once a user is logged in he/she can delete their account at this route.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Delete user</span>
+<span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>The update user route needed some slight adjustment but it was simple as well.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Update User</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// this will store an array of the keys the user is trying to update</span>
+    <span class="kd">const</span> <span class="nx">updates</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">allowedUpdates</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">password</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">age</span><span class="dl">'</span><span class="p">]</span>
+    <span class="kd">const</span> <span class="nx">isValidOperation</span> <span class="o">=</span> <span class="nx">updates</span><span class="p">.</span><span class="nx">every</span><span class="p">((</span><span class="nx">update</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">allowedUpdates</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">update</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isValidOperation</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid Updates!</span><span class="dl">'</span><span class="p">})</span>
+    <span class="p">}</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// for each update, stored in the updates array, save the new info to the user object we have access to</span>
+      <span class="nx">updates</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">updateField</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span>
+      <span class="p">})</span>
+      <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h4 id="working-with-task-routes--user-relationships">Working with task routes &amp; User Relationships</h4>
+<p>Now we will move onto the task routes. I am excited about this section because I will be able to directly use and implement it into the drawing prompt app I am working on. This will allow me to have users log in, submit prompts, and have prompts tied to the user who created it. We are going to learn how to tie tasks to the user who created it.</p>
+
+<p>We will do this by tying the user ID of the creator into the task/prompt created.</p>
+
+<p>First we will add the following to the Task Schema.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">owner</span><span class="p">:</span>
+  <span class="p">{</span>
+    <span class="nl">_id</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nl">type</span><span class="p">:</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">,</span>
+      <span class="nx">required</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="nx">name</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nl">type</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+      <span class="nx">required</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Next, on the task creation route, we will add auth middleware and change how we save the task to the DB.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add new task</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/tasks</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// const task = new Task(req.body)</span>
+  <span class="kd">const</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Task</span><span class="p">({</span>
+    <span class="p">...</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span>
+    <span class="na">owner</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">_id</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">,</span>
+      <span class="na">name</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">task</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">201</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">task</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Of course, as with every well thought out tutorial, there is an easier way to tie in the User to the Task. Mongoose supplies the ability to do this. Inside of our task model, lets change the above to this:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">owner</span><span class="p">:</span> <span class="p">{</span>
+  <span class="nl">type</span><span class="p">:</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">,</span>
+  <span class="nx">required</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">ref</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User</span><span class="dl">'</span> <span class="c1">// make sure that it is typed and spelled the same as the Model you are tying it to</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Next we will use Mongoose’s ability to ‘populate’ a field with info from the reference model. Since we made ‘User’ a ref for Task.owner, this is now possible like so:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">test</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Task</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="dl">'</span><span class="s1">5d387e41b7d972185c99e962</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="k">await</span> <span class="nx">task</span><span class="p">.</span><span class="nx">populate</span><span class="p">(</span><span class="dl">'</span><span class="s1">owner</span><span class="dl">'</span><span class="p">).</span><span class="nx">execPopulate</span><span class="p">()</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">owner</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">test</span><span class="p">();</span>
+
+<span class="c1">// User Object for the user who created the task will be logged to the console.</span>
+</code></pre></div></div>
+<p>This will convert the owner object of the Task into the entire profile of the user who created it. This only takes place inside the function. In the DB owner is still only the ID.</p>
+
+<p>To do this in the opposite direction, IE. Get all tasks created by a certain user, we will implement something called a <strong>Virtual Property.</strong> This is a relationship between two entities. The user and the task. We can do this by adding the following to the User model.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">userSchema</span><span class="p">.</span><span class="nx">virtual</span><span class="p">(</span><span class="dl">'</span><span class="s1">tasks</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">ref</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Task</span><span class="dl">'</span><span class="p">,</span>
+  <span class="c1">// This is the local area where task is related to, which is the user ID (created by mongoose)</span>
+  <span class="na">localField</span><span class="p">:</span> <span class="dl">'</span><span class="s1">_id</span><span class="dl">'</span><span class="p">,</span>
+  <span class="c1">// the foreignField is the place where the data relationship is stored on the 'Task' model</span>
+  <span class="na">foreignField</span><span class="p">:</span> <span class="dl">'</span><span class="s1">owner</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>The above code tells mongoose to create a virtual field called tasks. This will not be stored on the database, but will be used by mongoose to serve information to users. We specify the <code class="highlighter-rouge">ref</code> to be the <code class="highlighter-rouge">Task</code> model, the <code class="highlighter-rouge">localField</code> to be the <code class="highlighter-rouge">_id</code> of the <code class="highlighter-rouge">User</code> model, and the foreignField to be the <code class="highlighter-rouge">owner</code> field of the <code class="highlighter-rouge">Task</code> model.</p>
+
+<p>To test this, lets use this code:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="dl">'</span><span class="s1">5d3879499ad93a1e7ca15126</span><span class="dl">'</span><span class="p">);</span>
+  <span class="k">await</span> <span class="nx">user</span><span class="p">.</span><span class="nx">populate</span><span class="p">(</span><span class="dl">'</span><span class="s1">tasks</span><span class="dl">'</span><span class="p">).</span><span class="nx">execPopulate</span><span class="p">()</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">tasks</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span>
+
+<span class="c1">// This logs to the console ALL tasks created by the User with the ID passed.</span>
+</code></pre></div></div>
+<p>Very cool!</p>
+
+<h4 id="authenticating-users-to-get-tasks">Authenticating Users to get tasks</h4>
+<p>The following code is refactored to take the logged in user into account when performing CRUD operations. One thing I noticed is that <code class="highlighter-rouge">findByIdAndDelete</code> will delete any task with the id passed in, regardless of any other querys passed to it. It is best to use <code class="highlighter-rouge">findOneAndDelete</code> which allows for multiple queries to be passed in.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// update task</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/tasks/:id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">allowedUpdates</span> <span class="o">=</span> <span class="p">[</span><span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">description</span><span class="dl">'</span><span class="p">]</span>
+  <span class="kd">const</span> <span class="nx">updates</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">updatesAreAllowed</span> <span class="o">=</span> <span class="nx">updates</span><span class="p">.</span><span class="nx">every</span><span class="p">((</span><span class="nx">update</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">allowedUpdates</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">update</span><span class="p">))</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">updatesAreAllowed</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid Updates</span><span class="dl">'</span><span class="p">})</span>
+  <span class="p">}</span>
+
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Task</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="na">_id</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="na">owner</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">task</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">404</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="nx">updates</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">updateField</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">task</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">[</span><span class="nx">updateField</span><span class="p">]</span>
+    <span class="p">})</span>
+    <span class="k">await</span> <span class="nx">task</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">task</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="c1">// delete task by id</span>
+<span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="dl">'</span><span class="s1">/tasks/:id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">task</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Task</span><span class="p">.</span><span class="nx">findByOneAndDelete</span><span class="p">({</span><span class="na">_id</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="na">owner</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">})</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">task</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">404</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+      <span class="p">}</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">task</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h4 id="deleting-all-tasks-for-deleted-user-account">Deleting all tasks for deleted User account</h4>
+<p>If a user were to delete his/her account, we want the tasks they have created to also be deleted. (In my drawing app this will not be the case.) We could add some code to the DELETE user route, to also delete the tasks they have created, but our approach will be different. We will use middleware we will add to the User model to do so. This was a super easy fix.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Delete user tasks when user is removed.</span>
+<span class="nx">userSchema</span><span class="p">.</span><span class="nx">pre</span><span class="p">(</span><span class="dl">'</span><span class="s1">remove</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">this</span>
+  <span class="k">await</span> <span class="nx">Task</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">({</span><span class="na">owner</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">})</span>
+  <span class="nx">next</span><span class="p">();</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Thats it as far as my node learning goes for the day. For the second half of my day I will be diving back into a littl bit of the SICP lectures and book, Eloquent Javascrtipt, and an <a href="https://www.udemy.com/share/100pDeA0oYdVtVRn4=/">Algorithms course</a> by Colt Steele.</p>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

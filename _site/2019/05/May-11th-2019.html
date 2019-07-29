@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - May 11th 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="https://media.licdn.com/dms/image/C5603AQGuQnyqi_WYSQ/profile-displayphoto-shrink_200_200/0?e=1565827200&v=beta&t=LY5mk_3gumx40ZQP2FBSoKf_8xTb4SKGF7P0KFJkIW4">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>May 11th 2019</h2>
+    <p>Worked for a couple of hours on the Customer Quote App for my generator manager. I wrote some code to validate if the form was filled out as well as used an npm package (‘email-validator’) to validate the email address entered.
+<!--more-->
+Also worked on correctly displaying an error when the user has not completely filled out the form yet. (I will transition to a UI version of this, but for now I will stick with simple error messages.)</p>
+
+<h4 id="here-is-the-basic-unstyled-page-so-far">Here is the basic unstyled page so far.</h4>
+<p><img src="https://github.com/jordanvidrine/coding-journey/blob/master/Daily%20Logs/files/power-gen-form.png" alt="Customer Quote App" /></p>
+
+<p>I am a little proud of writing these two functions:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">formValidator</span><span class="p">(){</span>
+
+  <span class="kd">let</span> <span class="nx">needsToBeCorrected</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="c1">//creates an array populated with each form field that is not properly filled out</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">info</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">customerInfo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//email validator</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">info</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">email</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validator</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">customerInfo</span><span class="p">[</span><span class="nx">info</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nx">needsToBeCorrected</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="c1">//skip the 'isValid' info in the state</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">info</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">isValid</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">customerInfo</span><span class="p">[</span><span class="nx">info</span><span class="p">]</span> <span class="o">===</span> <span class="dl">''</span><span class="p">)</span>
+        <span class="nx">needsToBeCorrected</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">info</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+  <span class="c1">//tests to see if the array with form fields needing correction is 0</span>
+  <span class="c1">//which would mean the form is correctly filled out</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">needsToBeCorrected</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+      <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span>
+      <span class="na">customerInfo</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">customerInfo</span><span class="p">,</span>
+        <span class="nx">needsToBeCorrected</span><span class="p">,</span>
+        <span class="na">isValid</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="p">}})</span>
+    <span class="c1">//if it needs correcting, save the state</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">needsToBeCorrected</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+        <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">,</span>
+        <span class="na">customerInfo</span><span class="p">:</span> <span class="p">{</span>
+          <span class="p">...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">customerInfo</span><span class="p">,</span>
+          <span class="nx">needsToBeCorrected</span><span class="p">,</span>
+          <span class="na">isValid</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">}})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The above function is run once ‘next’ is clicked. The following is rendered underneath the component if isValid remains false.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var warningError;
+if (this.state.customerInfo.isValid === false) {
+  warningError = this.state.customerInfo.needsToBeCorrected.reduce((acc,cur,idx,array) =&gt; {
+  if (idx &lt; array.length-1) {
+      acc = acc + '' + ' ' + cur + ',';return acc
+  } else {
+    return acc + ' ' + cur + '.' + ' Once corrected, try submitting again.';
+  }},'The following items need to be corrected:');
+} else {
+  warningError = '';
+}
+</code></pre></div></div>
+<p><img src="https://github.com/jordanvidrine/coding-journey/blob/master/Daily%20Logs/files/error-msg.png" alt="error-msg" /></p>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

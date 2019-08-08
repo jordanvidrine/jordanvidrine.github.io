@@ -144,6 +144,24 @@
   <ul>
     
     <li>
+      <h3>August 5th 2019</h3>
+      <p><p>Today I’ll be getting back to the NodeJS course I am working through on Udemy. I feel like I have learned a really good amount of great information from this course. I’ve been able to personally use every piece of knowledge from this course into various personal apps and experiments since I started the course.</p>
+
+<h3 id="sorting-pagination--filtering-in-mongoosemongodb">Sorting, Pagination, &amp; Filtering in Mongoose/MongoDB</h3>
+<p>The first thing we implemented today was the ability for the database to use timestamps. This was super simple and only involved adding an options object as an argument when creating the Schema for a model.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="nl">timestamps</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>What this does is add a <code class="highlighter-rouge">createdAt</code> and <code class="highlighter-rouge">updatedAt</code> field to each item created in the database.</p>
+
+</p>
+      
+      <a href="/2019/08/August-5th-2019.html">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h3>July 30th & 31st 2019</h3>
       <p><p>Since I was so interested in making my idea work, I spent this week diving into finishing my simple Budgeting/Text Messaging app instead of my regular developer course work I normally do. For today’s post I will give you an overview of the project and what I did to accomplish the goals I had when I set out.</p>
 
@@ -381,20 +399,6 @@ Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-1
 <h3 id="final-thoughts">Final Thoughts</h3>
 <p>I really REALLY enjoyed creating and working on this app. The challenge of not working with a browser AT ALL was unique and exciting for me. It helped me to realize how much of our interactions with data and the web are for the most part behind the scenes. It sort of solidified my interest in back-end development over front-end as well. I am interested in hashing this idea out even further to add a bit more complexity to the user interactions, while still keeping it simple enough to not have to go into the YNAB app for every interaction with your budget.</p>
 </p>
-      
-    </li>
-    
-    <li>
-      <h3>July 26th & 29th 2019</h3>
-      <p><p>Last Friday (26th) and today (29th) I spent some time diving into the API of my favorite budgeting app. (<a href="http://www.ynab.com">YNAB!</a>)</p>
-
-<p>I had a random idea Friday morning to explore the ability to create an app that can receive an SMS text message like “Grocery Budget Left” and then return something like “You have $63.00 left in your groceries budget.”</p>
-
-<p>I searched and figured out I would need to use TWILIO or something similar. I ended up creating an account and going through their intro docs and was able to create a very simple example in a couple of hours. What I turned out was just hard coded budget amount that I got the ID for by reading through the YNAB docs. I sent a text to the TWILIO # and got back the amount of my grocery budget.</p>
-
-</p>
-      
-      <a href="/2019/07/July-26th-&-29th-2019.html">Read More...</a>
       
     </li>
     

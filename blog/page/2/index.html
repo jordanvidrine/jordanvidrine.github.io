@@ -45,6 +45,46 @@
   <ul>
     
     <li>
+      <h2>July 9th 2019</h2>
+      <p><p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
+
+<h3 id="chapter-11-async---eloquent-javascript">Chapter 11 Async - Eloquent Javascript</h3>
+<p>The author has a sense of humor. We will be learning the ins and outs of async by writing networking functions for a fictitious crow colony that has learned how to use javascript and communicate from nest to nest by sending signals to and from each other…. interesting.</p>
+
+<h4 id="callbacks">Callbacks</h4>
+<p>One approach to async programming is to make functions that perform a slow action take a callback argument to run when the code is finished working. (We learned about this in the NodeJS course we are currently working through.) As we learned previously, this can get convoluted quickly when wanting to perform more than one async operation. The example below has two callbacks. Any more and this could lead to hard to lots of nesting and hard to read code. IE.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">bigOak</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./crow-tech</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="dl">"</span><span class="s2">food caches</span><span class="dl">"</span><span class="p">,</span> <span class="nx">caches</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// first callback</span>
+  <span class="kd">let</span> <span class="nx">firstCache</span> <span class="o">=</span> <span class="nx">caches</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="nx">firstCache</span><span class="p">,</span> <span class="nx">info</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// second nested callback</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+</p>
+      
+      <a id='read-more' href="/2019/07/July-9th-2019.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
+      <h2>July 5th & 6th 2019</h2>
+      <p><p>Spent a couple of hours yesterday and today implementing pagination onto my site and blog. I met with a professional programmer and he had some great suggestions for what my portfolio should showcase, as well as some input for the blog.</p>
+
+<h4 id="things-i-implemented-and-changed">Things I Implemented and Changed</h4>
+<p><strong>1.</strong> The blog now shows a max of 10 posts on a single page. Each post also has a tag that tells Jekyll where to put the “Read More…” link.<br /><br />
+<strong>2.</strong> The home page is now my project showcase, and at the bottom of the page, my latest 2 entries show up for anyone who is interested to read it.<br /><br />
+<strong>3.</strong> I uploaded everything to my domain at <a href="www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
+<strong>4.</strong> I removed my github pages ‘blog’ and that all now resides on the github page for jordanvidrine.github.io<br /><br /></p>
+
+<p>After making edits, I use the <code class="highlighter-rouge">bundle exec jekyll build</code> command to build the site into normal html, css, and javascript files. I then upload that to both my github page, as well as my domain. I really like the consistency of my new site now and am pleased with the blogging functionality I put into it.</p>
+</p>
+      
+    </li>
+    
+    <li>
       <h2>July 3rd 2019</h2>
       <p><p>Spent the first couple of hours of my day trying to integrate pagination into this blog. It turned out very frustrating and uneventful because github pages does not support the newest jekyll pagination gem. I couldn’t for the life of me get the v1 of their gem to work either. I’ll have to look into that in some free time. Onto my node course!</p>
 
@@ -211,38 +251,6 @@
 
 <p>Take a look at it <a href="https://jordanvidrine.github.io/blog">here</a></p>
 </p>
-      
-    </li>
-    
-    <li>
-      <h2>June 20th 2019</h2>
-      <p><p>I’ve been feeling like my front end skills (CSS) are a little lacking so I think I’ll try and start working through the <a href="https://100dayscss.com/?dayIndex=1">100 days of css</a> challenges in my spare coding time.</p>
-
-<p>I looked over the first one today and was able to understand some of the more complex css like animations and keyframes and such. I used a .scss file and got a little more familiar with the syntax of that as well, using variables to help my code along. It is pretty much an exact copy of the code to match. I definitely could not solve this without looking over the solution.</p>
-
-<p class="codepen" data-height="428" data-theme-id="light" data-default-tab="css,result" data-user="jordanvidrine" data-slug-hash="jjyKYB" data-preview="true" style="height: 428px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="100 Days of CSS #1">
-  <span>See the Pen <a href="https://codepen.io/jordanvidrine/pen/jjyKYB/">
-  100 Days of CSS #1</a> by Jordan Vidrine (<a href="https://codepen.io/jordanvidrine">@jordanvidrine</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async="" src="https://static.codepen.io/assets/embed/ei.js"></script>
-
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>June 19th 2019</h2>
-      <p><p>Spent the first part of the day working through Eloquent Javascript chapters 8-9 on error handling and the dreaded regex. Not a huge fan of working with regex as it is pretty confusing but I do understand it and its purposes.</p>
-
-<h4 id="continued-working-on-nodejs-course">Continued working on Node.js Course</h4>
-<p>In the course today I went through more of using express inside of node. It is starting to get a little complex, which I like because it causes me to stretch my thinking and helps me to not get bored.</p>
-
-<p>The task was to create a basic app front end and backend. In the backend we created a .get(‘/weather’) route where we send a search query and we are returned the weather info in JSON for what we entered in. Here’s what that looked like.</p>
-
-</p>
-      
-      <a id='read-more' href="/2019/06/June-19th-2019.html#posts">Read More...</a>
       
     </li>
     

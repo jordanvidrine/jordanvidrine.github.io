@@ -45,6 +45,43 @@
   <ul>
     
     <li>
+      <h2>August 13th 2019</h2>
+      <p><p>Wow. What a week! Since last Tuesday up until this morning my time has been spent setting up, rehearsing, performing, and  setting down from my Art Spark performance. It was the best musical performance and activity I have ever had the privilege to participate in! If you’d like to check out some of that info, feel free to browse through my <a href="http://www.facebook.com/skiesspeakband">artist facebook page</a></p>
+
+<p>Now that I’m finished with the performance aspect of the grant, I will be able to devote more time to learning to code. So, lets move on!</p>
+
+<h3 id="uploading-files-with-multer-npm-package">Uploading files with multer npm package</h3>
+<p>The first part of my learning today was back to the uploading files section of the node course. We are doing this by using the multer npm package. I started off today with a challenge to:</p>
+<ol>
+  <li>Limit the upload size to 1MB</li>
+  <li>Only allow jpg, jpeg, or png files</li>
+</ol>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-13th-2019.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
+      <h2>August 5th 2019</h2>
+      <p><p>Today I’ll be getting back to the NodeJS course I am working through on Udemy. I feel like I have learned a really good amount of great information from this course. I’ve been able to personally use every piece of knowledge from this course into various personal apps and experiments since I started the course.</p>
+
+<h3 id="sorting-pagination--filtering-in-mongoosemongodb">Sorting, Pagination, &amp; Filtering in Mongoose/MongoDB</h3>
+<p>The first thing we implemented today was the ability for the database to use timestamps. This was super simple and only involved adding an options object as an argument when creating the Schema for a model.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="nl">timestamps</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>What this does is add a <code class="highlighter-rouge">createdAt</code> and <code class="highlighter-rouge">updatedAt</code> field to each item created in the database.</p>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-5th-2019.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h2>July 30th & 31st 2019</h2>
       <p><p>Since I was so interested in making my idea work, I spent this week diving into finishing my simple Budgeting/Text Messaging app instead of my regular developer course work I normally do. For today’s post I will give you an overview of the project and what I did to accomplish the goals I had when I set out.</p>
 
@@ -611,46 +648,6 @@ Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-1
     <span class="p">})</span>
 <span class="p">})</span>
 </code></pre></div></div>
-</p>
-      
-    </li>
-    
-    <li>
-      <h2>July 9th 2019</h2>
-      <p><p>Working from a great coffee shop in Lafayette today. Starting off the day reading through the asynchronous programming chapter in Eloquent Javascript. I feel fairly confident in what async functions are and how they work, but I want to read through this chapter to solidify any loose thinking in regards to that.</p>
-
-<h3 id="chapter-11-async---eloquent-javascript">Chapter 11 Async - Eloquent Javascript</h3>
-<p>The author has a sense of humor. We will be learning the ins and outs of async by writing networking functions for a fictitious crow colony that has learned how to use javascript and communicate from nest to nest by sending signals to and from each other…. interesting.</p>
-
-<h4 id="callbacks">Callbacks</h4>
-<p>One approach to async programming is to make functions that perform a slow action take a callback argument to run when the code is finished working. (We learned about this in the NodeJS course we are currently working through.) As we learned previously, this can get convoluted quickly when wanting to perform more than one async operation. The example below has two callbacks. Any more and this could lead to hard to lots of nesting and hard to read code. IE.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">bigOak</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">./crow-tech</span><span class="dl">"</span><span class="p">;</span>
-
-<span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="dl">"</span><span class="s2">food caches</span><span class="dl">"</span><span class="p">,</span> <span class="nx">caches</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// first callback</span>
-  <span class="kd">let</span> <span class="nx">firstCache</span> <span class="o">=</span> <span class="nx">caches</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-  <span class="nx">bigOak</span><span class="p">.</span><span class="nx">readStorage</span><span class="p">(</span><span class="nx">firstCache</span><span class="p">,</span> <span class="nx">info</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// second nested callback</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">info</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-9th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 5th & 6th 2019</h2>
-      <p><p>Spent a couple of hours yesterday and today implementing pagination onto my site and blog. I met with a professional programmer and he had some great suggestions for what my portfolio should showcase, as well as some input for the blog.</p>
-
-<h4 id="things-i-implemented-and-changed">Things I Implemented and Changed</h4>
-<p><strong>1.</strong> The blog now shows a max of 10 posts on a single page. Each post also has a tag that tells Jekyll where to put the “Read More…” link.<br /><br />
-<strong>2.</strong> The home page is now my project showcase, and at the bottom of the page, my latest 2 entries show up for anyone who is interested to read it.<br /><br />
-<strong>3.</strong> I uploaded everything to my domain at <a href="www.jordanvidrine.com">jordanvidrine.com</a> for a better online presence.<br /><br />
-<strong>4.</strong> I removed my github pages ‘blog’ and that all now resides on the github page for jordanvidrine.github.io<br /><br /></p>
-
-<p>After making edits, I use the <code class="highlighter-rouge">bundle exec jekyll build</code> command to build the site into normal html, css, and javascript files. I then upload that to both my github page, as well as my domain. I really like the consistency of my new site now and am pleased with the blogging functionality I put into it.</p>
 </p>
       
     </li>

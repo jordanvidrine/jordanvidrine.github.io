@@ -144,6 +144,7 @@
   <ul>
     
     <li>
+<<<<<<< HEAD
       <h3>August 5th 2019</h3>
       <p><p>Today I’ll be getting back to the NodeJS course I am working through on Udemy. I feel like I have learned a really good amount of great information from this course. I’ve been able to personally use every piece of knowledge from this course into various personal apps and experiments since I started the course.</p>
 
@@ -164,244 +165,47 @@
     <li>
       <h3>July 30th & 31st 2019</h3>
       <p><p>Since I was so interested in making my idea work, I spent this week diving into finishing my simple Budgeting/Text Messaging app instead of my regular developer course work I normally do. For today’s post I will give you an overview of the project and what I did to accomplish the goals I had when I set out.</p>
+=======
+      <h3>August 13th 2019</h3>
+      <p><p>Wow. What a week! Since last Tuesday up until this morning my time has been spent setting up, rehearsing, performing, and  setting down from my Art Spark performance. It was the best musical performance and activity I have ever had the privilege to participate in! If you’d like to check out some of that info, feel free to browse through my <a href="http://www.facebook.com/skiesspeakband">artist facebook page</a></p>
+>>>>>>> e6e73ea8e0c28e3e194830e94f64e2df704cd413
 
-<h2 id="project-goals">Project Goals</h2>
-<p>Even with the YNAB app being well designed and easy to use, entering small and basic transactions can be done in an easier way in my opinion. I set out to save time by not having to log into the YNAB app, navigate to the appropriate budget account, and input the transaction. The two main things I wanted to be able to do were:<br /><br />
-<strong>1. Get the amount left in a budget category by sms text</strong><br /><br />
-<strong>2. Enter transactions by sms text</strong><br />
-<br /></p>
-<h3 id="getting-started">Getting Started</h3>
-<p>After researching a bit I decided to use the Twilio service to serve as the SMS interaction between the express routes I would create to interact with the YNAB data. I went through <a href="https://www.twilio.com/docs/sms/quickstart/node#install-nodejs-and-the-twilio-module">the basic walkthrough on their site</a> to get familiar with the service, but decided I would build the app and test it via Postman before incorporating the Twilio service.</p>
+<p>Now that I’m finished with the performance aspect of the grant, I will be able to devote more time to learning to code. So, lets move on!</p>
 
-<p>One big reason for this is that Twilio gives you a free trial credit of $15.00 that slowly gets used up when sending and receiving messages. I knew I’d be sending ALOT of back and forth during the testing so I didnt want to dwindle this balance.</p>
+<h3 id="uploading-files-with-multer-npm-package">Uploading files with multer npm package</h3>
+<p>The first part of my learning today was back to the uploading files section of the node course. We are doing this by using the multer npm package. I started off today with a challenge to:</p>
+<ol>
+  <li>Limit the upload size to 1MB</li>
+  <li>Only allow jpg, jpeg, or png files</li>
+</ol>
 
-<h3 id="setting-up-the-express-app">Setting up the Express App</h3>
-<p>This for me is getting to the point where it is very straightforward and the syntax is finally starting to look normal and make sense.</p>
-
-<p>The gist of what’s happening here is that I am telling express to use the bodyParser (needed for the Twilio Integration), <code class="highlighter-rouge">express.json()</code> method, and lastly (at the bottom of the code, but before the <code class="highlighter-rouge">app.listen()</code> call) to use my custom error handler. I also tell express to use my <code class="highlighter-rouge">smsParse</code> middleware when recieving POST requests. The last line tells the express app to be listening on port 1337 of my computer, aka ‘localhost’.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">MessagingResponse</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">twilio</span><span class="dl">'</span><span class="p">).</span><span class="nx">twiml</span><span class="p">.</span><span class="nx">MessagingResponse</span><span class="p">;</span>
-<span class="kd">const</span> <span class="nx">bodyParser</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">body-parser</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">request</span><span class="dl">'</span><span class="p">)</span>
-<span class="kd">const</span> <span class="nx">smsParse</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./middleware/smsParse</span><span class="dl">'</span><span class="p">)</span>
-<span class="kd">let</span> <span class="nx">handleError</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./middleware/handleError</span><span class="dl">'</span><span class="p">)</span>
-
-<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">bodyParser</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">({</span><span class="na">extended</span><span class="p">:</span><span class="kc">false</span><span class="p">}));</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
-
-<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="nx">smsParse</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="c1">// Boiler plate formatting to send a text message.</span>
-  <span class="c1">// res.message has the message saved to it from the smsParse middleware</span>
-  <span class="c1">// we will be sending that to the user who sent an SMS to the number</span>
-  <span class="c1">// Twilio has provided us</span>
-  <span class="kd">let</span> <span class="nx">twiml</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MessagingResponse</span><span class="p">();</span>
-  <span class="nx">twiml</span><span class="p">.</span><span class="nx">message</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,{</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text/xml</span><span class="dl">'</span><span class="p">});</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">twiml</span><span class="p">.</span><span class="nx">toString</span><span class="p">())</span>
-<span class="p">})</span>
-
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">handleError</span><span class="p">)</span>
-
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">1337</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Express server listening on port 1337</span><span class="dl">'</span><span class="p">)</span>
-<span class="p">})</span>
-</code></pre></div></div>
-
-<h3 id="middleware">Middleware</h3>
-<p>The following are the syntax examples of how a user can interact with the app. The first part is what is sent by the user to the number Twilio provides and the second part is the response that would be received.</p>
-
-<p><strong>To get budget data</strong><br />
-Groceries // You have $50.41 left in your Dining Out budget.<br />
-<strong>Enter a Purchase</strong><br />
-Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-12.34 was successfully entered.<br />
-<strong>Enter a Refund</strong><br />
-// Enter Credit: Groceries 10.00 Wal-Mart » Your transaction with Wal Mart in the amount of $10.00 was successfully entered.<br /></p>
-
-<p>I setup this middleware to be able to parse the body of the request and determine if the user wants to inset a transaction, or get their budget amount.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">getCategory</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../helpers/getCategory</span><span class="dl">'</span><span class="p">)</span>
-<span class="kd">const</span> <span class="nx">ynabActions</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../helpers/ynabActions</span><span class="dl">'</span><span class="p">)</span>
-
-<span class="nx">smsParse</span> <span class="o">=</span> <span class="k">async</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="nx">numOfArgs</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">).</span><span class="nx">length</span><span class="p">;</span>
-
-  <span class="c1">// checks if arguments exist</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">numOfArgs</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">category</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">-</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">);</span>
-
-    <span class="c1">// Only passing in one argument retrieves the balance of that argument/category</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">numOfArgs</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ynabActions</span><span class="p">.</span><span class="nx">getBalance</span><span class="p">(</span><span class="nx">category</span><span class="p">);</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">`You have </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">balance</span><span class="p">}</span><span class="s2"> left in your </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">budget</span><span class="p">}</span><span class="s2"> budget.`</span>
-        <span class="nx">next</span><span class="p">();</span>
-      <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-      <span class="p">}</span>
-
-    <span class="c1">// To Cred or Deb an acct, 3 arguments must be passed</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">numOfArgs</span> <span class="o">===</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">args</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">)]</span>
-      <span class="kd">let</span> <span class="nx">cat</span> <span class="o">=</span> <span class="nx">args</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">-</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">);</span>
-
-      <span class="c1">// converting amt to miliunits (number passed MUST in have two decimal places &gt;&gt; 2.33, -23.45)</span>
-      <span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">,</span><span class="dl">''</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">0</span><span class="dl">'</span>
-      <span class="kd">let</span> <span class="nx">amt</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-      <span class="kd">let</span> <span class="nx">payee</span> <span class="o">=</span> <span class="nx">args</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">-</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">);</span>
-
-      <span class="c1">// checks the argument types, must be correct to continue on</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">cat</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">amt</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">number</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">payee</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">try</span> <span class="p">{</span>
-          <span class="kd">let</span> <span class="nx">transactionData</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ynabActions</span><span class="p">.</span><span class="nx">addTransaction</span><span class="p">(</span><span class="nx">category</span><span class="p">,</span><span class="nx">amt</span><span class="p">,</span><span class="nx">payee</span><span class="p">)</span>
-          <span class="c1">// saves the response to res.message to be passed back to the user</span>
-          <span class="nx">res</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="nx">transactionData</span><span class="p">.</span><span class="nx">successMsg</span><span class="p">;</span>
-
-          <span class="nx">next</span><span class="p">()</span>
-        <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">next</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="c1">// Syntax Error Message</span>
-      <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="na">Error</span><span class="p">:</span><span class="dl">'</span><span class="s1">Syntax Error!</span><span class="se">\n</span><span class="s1">For Balance Inquiry &gt;&gt; Category </span><span class="se">\n</span><span class="s1"> For Purchase &gt;&gt; Category, -Purchase Amt, Payee</span><span class="se">\n</span><span class="s1"> For Refund &gt;&gt; Category, Refund Amt, Payee</span><span class="dl">'</span> <span class="p">});</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">smsParse</span>
-</code></pre></div></div>
-<h3 id="ynab-helper-functions">YNAB Helper Functions</h3>
-<p>I consolidated the YNAB interaction functions to an object with methods inside of it. All of the YNAB interaction happens inside the following script. They interact with that API through the <a href="https://www.npmjs.com/package/ynab">YNAB npm package</a>, rather than making http requests on my own. It is also at this time that I learned about the <a href="https://www.npmjs.com/package/dotenv">dotenv NPM package</a>. This is used to store secret keys, passwords, and auth tokens for use in the node.js code. Thanks to Dan at the <a href="https://www.acadianasoftwaregroup.org/">Acadiana Software Group’s</a> slack page for that!</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">dotenv</span><span class="dl">'</span><span class="p">).</span><span class="nx">config</span><span class="p">()</span>
-<span class="kd">const</span> <span class="nx">ynab</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">ynab</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">ynabAPI</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ynab</span><span class="p">.</span><span class="nx">API</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">YNAB_ACCESS_TOKEN</span><span class="p">)</span>
-<span class="kd">const</span> <span class="nx">getCategory</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./getCategory</span><span class="dl">'</span><span class="p">)</span>
-
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="k">async</span> <span class="nx">getBalance</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">categoryData</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCategoryData</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span>
-      <span class="kd">let</span> <span class="nx">balance</span> <span class="o">=</span> <span class="s2">`$`</span> <span class="o">+</span> <span class="nx">ynab</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">convertMilliUnitsToCurrencyAmount</span><span class="p">(</span><span class="nx">categoryData</span><span class="p">.</span><span class="nx">balance</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-      <span class="c1">// add trailing 0 to any number with one decimal place</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">balance</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">balance</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="nx">balance</span> <span class="o">=</span> <span class="nx">balance</span><span class="o">+</span><span class="dl">'</span><span class="s1">0</span><span class="dl">'</span><span class="p">;</span> <span class="p">}</span>
-      <span class="kd">let</span> <span class="nx">budget</span> <span class="o">=</span> <span class="nx">categoryData</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
-      <span class="k">return</span> <span class="p">{</span> <span class="nx">balance</span> <span class="p">,</span> <span class="nx">budget</span> <span class="p">}</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-
-  <span class="k">async</span> <span class="nx">addTransaction</span><span class="p">(</span><span class="nx">category</span><span class="p">,</span><span class="nx">amt</span><span class="p">,</span><span class="nx">payee</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">categoryData</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCategoryData</span><span class="p">(</span><span class="nx">category</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">categoryData</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Category not found!</span><span class="dl">'</span><span class="p">)</span>
-      <span class="p">}</span>
-      <span class="c1">// Search to see if payee already exists in the payee database</span>
-      <span class="kd">let</span> <span class="nx">payeesData</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">getPayee</span><span class="p">(</span><span class="nx">payee</span><span class="p">)</span>
-      <span class="kd">let</span> <span class="nx">payee_name</span><span class="p">;</span>
-      <span class="c1">// If payee does exist, set payee_name to match name in database so a new payee is not created</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">payeesData</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">payee_name</span> <span class="o">=</span> <span class="nx">payeesData</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
-      <span class="c1">// if payee does not exist in database, set the payee name to the one entered</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">payeesData</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">payee_name</span> <span class="o">=</span> <span class="nx">payee</span><span class="p">;</span>
-      <span class="p">}</span>
-
-      <span class="c1">// define transaction object to pass to the ynab api</span>
-      <span class="kd">let</span> <span class="nx">transaction</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="na">account_id</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FAKE_BANK_ID</span><span class="p">,</span>
-        <span class="na">amount</span><span class="p">:</span> <span class="nx">amt</span><span class="p">,</span>
-        <span class="na">date</span><span class="p">:</span> <span class="nx">ynab</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">getCurrentDateInISOFormat</span><span class="p">(),</span>
-        <span class="na">payee_id</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="na">payee_name</span><span class="p">:</span> <span class="nx">payee_name</span><span class="p">,</span>
-        <span class="na">category_id</span><span class="p">:</span> <span class="nx">categoryData</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
-        <span class="na">cleared</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-        <span class="na">approved</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="na">memo</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-      <span class="p">};</span>
-
-      <span class="kd">let</span> <span class="nx">transactionData</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ynabAPI</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">createTransaction</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_BUDGET_ID</span><span class="p">,</span> <span class="p">{</span><span class="nx">transaction</span><span class="p">});</span>
-
-      <span class="k">return</span> <span class="p">{</span><span class="nx">transactionData</span><span class="p">,</span> <span class="na">successMsg</span><span class="p">:</span> <span class="s2">`Your transaction with </span><span class="p">${</span><span class="nx">transactionData</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">transaction</span><span class="p">.</span><span class="nx">payee_name</span><span class="p">}</span><span class="s2"> in the amount of </span><span class="p">${</span><span class="s2">`$`</span> <span class="o">+</span> <span class="nx">ynab</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">convertMilliUnitsToCurrencyAmount</span><span class="p">(</span><span class="nx">transactionData</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">transaction</span><span class="p">.</span><span class="nx">amount</span><span class="p">,</span><span class="mi">2</span><span class="p">)}</span><span class="s2"> was successfully entered in the </span><span class="p">${</span><span class="nx">categoryData</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2"> category.`</span><span class="p">};</span>
-
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// create custom error based on the returned error from the YNAB api</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">detail</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
-      <span class="p">}</span>
-      <span class="k">throw</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-
-  <span class="k">async</span> <span class="nx">getCategoryData</span><span class="p">(</span><span class="nx">category</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">categoriesData</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ynabAPI</span><span class="p">.</span><span class="nx">categories</span><span class="p">.</span><span class="nx">getCategories</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_BUDGET_ID</span><span class="p">);</span>
-      <span class="c1">// I perform this filter because the API returns an internal master list that doesnt seem necessary to my app</span>
-      <span class="kd">let</span> <span class="nx">filteredData</span> <span class="o">=</span> <span class="nx">categoriesData</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">category_groups</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">cat</span> <span class="o">=&gt;</span> <span class="nx">cat</span><span class="p">[</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">]</span> <span class="o">!==</span> <span class="dl">"</span><span class="s2">Internal Master Category</span><span class="dl">"</span><span class="p">);</span>
-      <span class="kd">let</span> <span class="nx">categoryData</span> <span class="o">=</span> <span class="nx">getCategory</span><span class="p">(</span><span class="nx">filteredData</span><span class="p">,</span> <span class="nx">category</span><span class="p">)</span>
-      <span class="k">return</span> <span class="nx">categoryData</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-
-  <span class="k">async</span> <span class="nx">getPayee</span><span class="p">(</span><span class="nx">payee</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">payees</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ynabAPI</span><span class="p">.</span><span class="nx">payees</span><span class="p">.</span><span class="nx">getPayees</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_BUDGET_ID</span><span class="p">);</span>
-      <span class="kd">let</span> <span class="nx">foundPayee</span> <span class="o">=</span> <span class="nx">payees</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">payees</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="k">return</span> <span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="nx">payee</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()})</span>
-      <span class="k">return</span> <span class="nx">foundPayee</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-<h3 id="recursing-through-the-data">Recursing through the data</h3>
-<p>One issue I had to tackle was the ability to find the correct Category’s ID, based on what the user inputs into the text. YNAB returns an entire list of categories when you request a budget using the budget ID, but in order to get the specific amount left in a category, you need the category ID and have to make a separate request.</p>
-
-<p>To find the ID, I created a recursive function that would search through category data, and their sub categories until it found the matching category that the user needed. The function returns the category object, which includes data like the amount left in the budget, and other important data points one may be interested in.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">getCategory</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">categoryToMatch</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">category</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
-
-    <span class="kd">function</span> <span class="nx">recurse</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="nx">categoryToMatch</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="nx">categoryToMatch</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">())</span> <span class="p">{</span>
-                  <span class="nx">category</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-                  <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">categories</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-                  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">categories</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                     <span class="nx">recurse</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">categories</span><span class="p">,</span> <span class="nx">categoryToMatch</span><span class="p">)</span>
-                     <span class="k">if</span> <span class="p">(</span><span class="nx">category</span><span class="p">)</span> <span class="p">{</span>
-                         <span class="k">break</span><span class="p">;</span>
-                     <span class="p">}</span>
-                  <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="nx">recurse</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="nx">categoryToMatch</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">category</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">getCategory</span>
-</code></pre></div></div>
-<h3 id="custom-error-handling">Custom Error Handling</h3>
-<p>Express handles errors automatically pretty well. After encountering small issues with returning the correct error at certain points in the code, I decided to make my own simple error handler.</p>
-
-<p>To do this, you just need to call <code class="highlighter-rouge">app.use(YourErrorHandler)</code> at the bottom of the express script. In your error handler you need to pass in <code class="highlighter-rouge">err</code> as the first argument, which will be the errors that express has encountered. Here is that code:</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">handleError</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="na">error</span><span class="p">:</span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">name</span><span class="p">})</span>
-<span class="p">}</span>
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">handleError</span><span class="p">;</span>
-</code></pre></div></div>
-<h3 id="working-example">Working Example</h3>
-<p><img src="https://media.giphy.com/media/dC8gilXeMVDTrAgx8O/giphy.gif" alt="example-app" /></p>
-<h3 id="final-thoughts">Final Thoughts</h3>
-<p>I really REALLY enjoyed creating and working on this app. The challenge of not working with a browser AT ALL was unique and exciting for me. It helped me to realize how much of our interactions with data and the web are for the most part behind the scenes. It sort of solidified my interest in back-end development over front-end as well. I am interested in hashing this idea out even further to add a bit more complexity to the user interactions, while still keeping it simple enough to not have to go into the YNAB app for every interaction with your budget.</p>
 </p>
+      
+      <a href="/2019/08/August-13th-2019.html">Read More...</a>
       
     </li>
     
+<<<<<<< HEAD
+=======
+    <li>
+      <h3>August 5th 2019</h3>
+      <p><p>Today I’ll be getting back to the NodeJS course I am working through on Udemy. I feel like I have learned a really good amount of great information from this course. I’ve been able to personally use every piece of knowledge from this course into various personal apps and experiments since I started the course.</p>
+
+<h3 id="sorting-pagination--filtering-in-mongoosemongodb">Sorting, Pagination, &amp; Filtering in Mongoose/MongoDB</h3>
+<p>The first thing we implemented today was the ability for the database to use timestamps. This was super simple and only involved adding an options object as an argument when creating the Schema for a model.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="nl">timestamps</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>What this does is add a <code class="highlighter-rouge">createdAt</code> and <code class="highlighter-rouge">updatedAt</code> field to each item created in the database.</p>
+
+</p>
+      
+      <a href="/2019/08/August-5th-2019.html">Read More...</a>
+      
+    </li>
+    
+>>>>>>> e6e73ea8e0c28e3e194830e94f64e2df704cd413
   </ul>
 <footer>
 <p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>

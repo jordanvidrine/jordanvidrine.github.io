@@ -144,6 +144,32 @@
   <ul>
     
     <li>
+      <h3>August 19th 2019</h3>
+      <p><p>Today we will be learning how to send emails inside of nodeJS, using env variables (which I learned a couple weeks back), creating a production MongoDB database, as well as getting into testing inside of nodeJS. (this is something I am eager to get into, as there hasnt been any debugging yet)</p>
+
+<h3 id="sending-emails-with-nodejs">Sending emails with nodeJS</h3>
+<p>We will be using <a href="http://www.sendgrid.com">SendGrid</a>. This service is run by Twilio, which I got familiar with during my SMS Text/YNAB app I worked on a couple of weeks ago. The setup for sendgrid was extremely simple. Here is an example of it working.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">sgMail</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@sendgrid/mail</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">sendGridAPIKey</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">yourKeyHere</span><span class="dl">"</span>
+
+<span class="nx">sgMail</span><span class="p">.</span><span class="nx">setApiKey</span><span class="p">(</span><span class="nx">sendGridAPIKey</span><span class="p">)</span>
+
+<span class="nx">sgMail</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+  <span class="na">to</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">from</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">subject</span><span class="p">:</span> <span class="dl">'</span><span class="s1">first sendgrid email</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">From nodeJS</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+</p>
+      
+      <a href="/2019/08/August-19th-2019.html">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h3>August 13th 2019</h3>
       <p><p>Wow. What a week! Since last Tuesday up until this morning my time has been spent setting up, rehearsing, performing, and  setting down from my Art Spark performance. It was the best musical performance and activity I have ever had the privilege to participate in! If you’d like to check out some of that info, feel free to browse through my <a href="http://www.facebook.com/skiesspeakband">artist facebook page</a></p>
 
@@ -159,24 +185,6 @@
 </p>
       
       <a href="/2019/08/August-13th-2019.html">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h3>August 5th 2019</h3>
-      <p><p>Today I’ll be getting back to the NodeJS course I am working through on Udemy. I feel like I have learned a really good amount of great information from this course. I’ve been able to personally use every piece of knowledge from this course into various personal apps and experiments since I started the course.</p>
-
-<h3 id="sorting-pagination--filtering-in-mongoosemongodb">Sorting, Pagination, &amp; Filtering in Mongoose/MongoDB</h3>
-<p>The first thing we implemented today was the ability for the database to use timestamps. This was super simple and only involved adding an options object as an argument when creating the Schema for a model.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">timestamps</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div></div>
-<p>What this does is add a <code class="highlighter-rouge">createdAt</code> and <code class="highlighter-rouge">updatedAt</code> field to each item created in the database.</p>
-
-</p>
-      
-      <a href="/2019/08/August-5th-2019.html">Read More...</a>
       
     </li>
     

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - August 19th 2019</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="/assets/img/profile.jpg">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>August 19th 2019</h2>
+    <p>Today we will be learning how to send emails inside of nodeJS, using env variables (which I learned a couple weeks back), creating a production MongoDB database, as well as getting into testing inside of nodeJS. (this is something I am eager to get into, as there hasnt been any debugging yet)</p>
+
+<h3 id="sending-emails-with-nodejs">Sending emails with nodeJS</h3>
+<p>We will be using <a href="http://www.sendgrid.com">SendGrid</a>. This service is run by Twilio, which I got familiar with during my SMS Text/YNAB app I worked on a couple of weeks ago. The setup for sendgrid was extremely simple. Here is an example of it working.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">sgMail</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@sendgrid/mail</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">sendGridAPIKey</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">yourKeyHere</span><span class="dl">"</span>
+
+<span class="nx">sgMail</span><span class="p">.</span><span class="nx">setApiKey</span><span class="p">(</span><span class="nx">sendGridAPIKey</span><span class="p">)</span>
+
+<span class="nx">sgMail</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+  <span class="na">to</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">from</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">subject</span><span class="p">:</span> <span class="dl">'</span><span class="s1">first sendgrid email</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">From nodeJS</span><span class="dl">'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<!--more-->
+<p>We are going to be using this to send ‘users’ and email when they have signed up or canceled our theoretical service. Here is how that implementation looks. In the src folder, we create an emails folder, and add this code into ‘account.js’:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">sgMail</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">@sendgrid/mail</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">sendGridAPIKey</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">key</span><span class="dl">"</span>
+
+<span class="nx">sgMail</span><span class="p">.</span><span class="nx">setApiKey</span><span class="p">(</span><span class="nx">sendGridAPIKey</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">sendWelcomeEmail</span> <span class="o">=</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">sgMail</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">to</span><span class="p">:</span> <span class="nx">email</span><span class="p">,</span>
+    <span class="na">from</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">subject</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Welcome to Our App!</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">text</span><span class="p">:</span> <span class="s2">`Hello </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">! We are so glad you decided to join in on this movement.`</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">sendWelcomeEmail</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>To integrate this with the User router for creating a new account we require the function we just created and add <code class="highlighter-rouge">sendWelcomeEmail(user.email, user.name)</code> to the try/catch block in the create user route.</p>
+
+<h3 id="local-env-variables">Local Env Variables</h3>
+<p>I’ve worked with these when I was creating the YNAB/SMS app. It’s a good habit to get into for security and helps for customization of variables as well. For example, we can use certain variables in development and others in production.</p>
+
+<p>For safety purposes it is important as well. Especially with git repo’s. Something I have learned is that even if you remove all API keys, logins, etc before you push to git, the data can still be accessed in the commit history.</p>
+
+<p>In this current project, we will create a config folder with a dev.env file. This is where we will provide the variables for the dev environment. The syntax for our environment variables looks like this: <code class="highlighter-rouge">key=value</code>.</p>
+
+<p>To use the .env file to create environment variables, we can use an NPM module called <a href="https://www.npmjs.com/package/env-cmd">env-cmd</a>. In the past, I have used <a href="https://www.npmjs.com/package/dotenv">dotenv</a>. Dotenv has way more weekly downloads, so that seems to mean its more widely used.</p>
+
+<p>Since we will only need this as a dev dependency, we can install using <code class="highlighter-rouge">--save-dev</code>.</p>
+
+<p>We will be editing the package.json file dev script section to use the env-cmd to get the environment variables we have set.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node src/index.js"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"env-cmd -f ./config/dev.env nodemon src/index.js"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>This process is simple and causes the environment variables to be set any time we run “npm run dev”</p>
+
+<h3 id="production-with-heroku--env-variables">Production with Heroku + Env Variables</h3>
+<p>This lesson also covered something I have already done, which is setting up a cloud based MongoDB server using MongoDB Atlas.</p>
+
+<p>We will be pushing our current code to Git and Heroku. For the app to work correctly on Heroku we need to be able to declare environment variables inside the heroku env.</p>
+
+<h4 id="creating-heroku-app">Creating Heroku app</h4>
+<p>After creating a git repository of the files, in the terminal run <code class="highlighter-rouge">heroku create app {app-name}</code></p>
+
+<p>We will then create the environment variables using heroku config. We can use this command to set, read, and delete values.</p>
+
+<p>To create, in the command terminal use: <code class="highlighter-rouge">heroku config:set key=value</code></p>
+
+<p><strong>DONT FORGET TO URL ENCODE ANY PASSWORDS THAT HAVE SPECIAL CHARACTERS!!</strong>. I did not do this at first and the app was not connecting to the database.</p>
+
+<h3 id="summary">Summary</h3>
+<p>Thus far in the course, I have learned how to create a full fledged app that allows users to create accounts, and create “tasks” or anything for that matter under their account. This essentially is the base build for most apps that are out there today.</p>
+
+<p>Instagram for examples is primarily a database of user accounts, and a list of images (tasks) that each user has created.</p>
+
+<h4 id="rest-of-the-day">Rest of the day</h4>
+<p>I read through chapter 15 of Eloquent Javascript a couple times. The chapter is on creating a basic platform game in the browser only using Javascript. The level of difficulty on this chapter I feel has increased 10 fold from any precious chapter. I will continue to go through it, but it is a tedious and hard chapter for my current level to be going through.</p>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

@@ -283,6 +283,8 @@ body {
         padding: 15px;
         margin: 25px 0;
         overflow: scroll; }
+  #posts ol li {
+    margin: 0 0 5px 0; }
 
 #pagination {
   width: 400px;

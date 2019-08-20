@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - August 20th Part 2</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="/assets/img/profile.jpg">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>August 20th Part 2</h2>
+    <h3 id="eloquent-javascript-chapter-16"><strong>Eloquent Javascript Chapter 16</strong></h3>
+<p>In my previous post, I wrote about the resources I have been and continue to use while learning Javascript. One of the best ones has been Eloquent Javascript.</p>
+
+<p>The latest chapter was tough, but the more I sat with it and examined the code line by line, as well as inside of a debugger, the more I understood what was going on. I went through all of the code of the chapter and ran it in the FireFox Developer debugger OVER AND OVER again! Each time I had a realization, I commented near the line of code what was happening.</p>
+
+<p>I feel like I have a pretty good handle of how the code now works and what exactly is happening behind the scenes. I believe what I am most impressed with about this chapter, and the book in general, is just how much can be done with PURE javascript.
+<!--more--></p>
+
+<p>The chapter walked the reader through all of the code to create a platform based game, inspired by the browser based game <a href="http://www.lessmilk.com/games/10">Dark Blue</a>.</p>
+
+<p><img src="https://eloquentjavascript.net/img/darkblue.png" alt="Game Example" /></p>
+
+<p>I know for a fact that by ability to sit (4ish hours) with this code and go through it line by line was helped by my going through the Watch and Code courses by Gordon Zhu that I wrote about in my previous post. I felt pretty accomplished being able to go through this and understand the inner workings as well. It’s a good feeling!</p>
+
+<p>The following is the code from the chapter, with my insights that I came to while reading through and working with the code in the debugger.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// SECOND function to run - Called as an argument to runLevel</span>
+<span class="kd">class</span> <span class="nx">Level</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">plan</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// plan is passed as a string of chars to build a level off of</span>
+    <span class="c1">// rows will be an array of arrays. Each array will be an array of its characters from</span>
+    <span class="c1">// left to right. The height and width of the level will be determined on the length</span>
+    <span class="c1">// of rows as well as the length of the arrays within rows</span>
+    <span class="kd">let</span> <span class="nx">rows</span> <span class="o">=</span> <span class="nx">plan</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="dl">"</span><span class="se">\n</span><span class="dl">"</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">l</span> <span class="o">=&gt;</span> <span class="p">[...</span><span class="nx">l</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">rows</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span>
+
+    <span class="c1">// startActors are the movables characters in the game ie. player, coins, moving lava</span>
+    <span class="c1">// they will be placed ON TOP of the background grid of the "level"</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">startActors</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="c1">// this section will convert the characters in the arrays in rows to arrays of their</span>
+    <span class="c1">// corresponding level parts. ie. wall, lava, empty background</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">rows</span> <span class="o">=</span> <span class="nx">rows</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">row</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">row</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">ch</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// when converting the characters to their level parts, this looks at the levelChars Object</span>
+        <span class="c1">// to determine what character corresponds to what</span>
+        <span class="kd">let</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">levelChars</span><span class="p">[</span><span class="nx">ch</span><span class="p">];</span>
+        <span class="c1">// if the levelChars[ch] returns "wall", "empty", "lava" it is a background part/string</span>
+        <span class="c1">// if the levelChars[ch] returns an object, it is stored in the startActors to later be</span>
+        <span class="c1">// placed on top of the background level design</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">type</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">)</span> <span class="k">return</span> <span class="nx">type</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">startActors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+          <span class="c1">// if the part of the level is an 'actor', the create method on that actor is called</span>
+          <span class="c1">// by giving the coordinates of the actor, as well as the corresponding character</span>
+          <span class="c1">// that character is stored in the startActors array, and in its place in the background</span>
+          <span class="c1">// level design will be an empty area</span>
+          <span class="nx">type</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="nx">ch</span><span class="p">));</span>
+          <span class="k">return</span> <span class="dl">"</span><span class="s2">empty</span><span class="dl">"</span><span class="p">;</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// SIXTEENTH function to be Called</span>
+<span class="c1">// checks if an actor touches something it should not</span>
+<span class="c1">// it is passed a vector object of the possible new position, as well as the size of the actor</span>
+<span class="c1">// and the type of object the actor should not be touching</span>
+<span class="nx">Level</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">touches</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">size</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// the following take into consideration the projected movement, and the size of the actor moving</span>
+  <span class="c1">// to get the possible space the actor would move in</span>
+  <span class="kd">var</span> <span class="nx">xStart</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">xEnd</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">size</span><span class="p">.</span><span class="nx">x</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">yStart</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">yEnd</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">size</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+
+  <span class="c1">// this sections checks if the actor is touching whatever was passed as type to the function</span>
+  <span class="c1">// either coin, lava, or wall</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">yStart</span><span class="p">;</span> <span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">yEnd</span><span class="p">;</span> <span class="nx">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">xStart</span><span class="p">;</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">xEnd</span><span class="p">;</span> <span class="nx">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// if the player would go outside of the bounds of the level, it will be treated as if</span>
+      <span class="c1">// the player is hitting a wall</span>
+      <span class="kd">let</span> <span class="nx">isOutside</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">x</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">||</span> <span class="nx">y</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">y</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+
+      <span class="c1">// if the player is not going out of bounds, the pssobile coordinate is checked by calling</span>
+      <span class="c1">// up the rows with an x and a y coord passed</span>
+      <span class="kd">let</span> <span class="nx">here</span> <span class="o">=</span> <span class="nx">isOutside</span> <span class="p">?</span> <span class="dl">"</span><span class="s2">wall</span><span class="dl">"</span> <span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="nx">y</span><span class="p">][</span><span class="nx">x</span><span class="p">];</span>
+      <span class="c1">// if here = the type that was passed, touching will return true</span>
+      <span class="c1">// if not, it will return false</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">here</span> <span class="o">==</span> <span class="nx">type</span><span class="p">)</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">false</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">State</span> <span class="p">{</span>
+  <span class="c1">// EIGTH function to be run.</span>
+  <span class="c1">// it is passed the level, the actors at level.startActors, as well as a status (playing)</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">level</span><span class="p">,</span> <span class="nx">actors</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">level</span> <span class="o">=</span> <span class="nx">level</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">actors</span> <span class="o">=</span> <span class="nx">actors</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// SEVENTH function to be run. Called inside of runLevel</span>
+  <span class="c1">// it is only passed the level function and will create a new instance of State</span>
+  <span class="c1">// it will return a State object</span>
+  <span class="kd">static</span> <span class="nx">start</span><span class="p">(</span><span class="nx">level</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">State</span><span class="p">(</span><span class="nx">level</span><span class="p">,</span> <span class="nx">level</span><span class="p">.</span><span class="nx">startActors</span><span class="p">,</span> <span class="dl">"</span><span class="s2">playing</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">get</span> <span class="nx">player</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">actors</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">a</span> <span class="o">=&gt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">player</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// THIRTEENTH function to be run</span>
+<span class="c1">// its arguments are the timeStep from the anonymous animation function and an object of keys</span>
+<span class="c1">// either being pressed down or not</span>
+<span class="nx">State</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// defines actors as an array of actor objects returned from any of the actors update methods</span>
+  <span class="c1">// the timestep, keys object, and the state is passed to the actor update method</span>
+  <span class="kd">let</span> <span class="nx">actors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">actors</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">actor</span> <span class="o">=&gt;</span> <span class="nx">actor</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">keys</span><span class="p">));</span>
+
+  <span class="c1">// creates a new state with the current level, an array of updated actors, and the current status</span>
+  <span class="kd">let</span> <span class="nx">newState</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">State</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span> <span class="nx">actors</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">);</span>
+
+  <span class="c1">// if the game is still being played, return the new state</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">newState</span><span class="p">.</span><span class="nx">status</span> <span class="o">!=</span> <span class="dl">"</span><span class="s2">playing</span><span class="dl">"</span><span class="p">)</span> <span class="k">return</span> <span class="nx">newState</span><span class="p">;</span>
+
+  <span class="c1">// defines player as the new state player</span>
+  <span class="kd">let</span> <span class="nx">player</span> <span class="o">=</span> <span class="nx">newState</span><span class="p">.</span><span class="nx">player</span><span class="p">;</span>
+
+  <span class="c1">// if this player is touching lava, the game is over</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">touches</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">player</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="dl">"</span><span class="s2">lava</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">State</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span> <span class="nx">actors</span><span class="p">,</span> <span class="dl">"</span><span class="s2">lost</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// if the actor is not the player, and the player overlaps with any actor</span>
+  <span class="c1">// newState will resolve to whatever the result of actor.collide is</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">actor</span> <span class="k">of</span> <span class="nx">actors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">actor</span> <span class="o">!=</span> <span class="nx">player</span> <span class="o">&amp;&amp;</span> <span class="nx">overlap</span><span class="p">(</span><span class="nx">actor</span><span class="p">,</span> <span class="nx">player</span><span class="p">))</span> <span class="p">{</span>
+      <span class="c1">// this calls the collide method on any actor that the currently iterating actor will</span>
+      <span class="c1">// collide with</span>
+      <span class="nx">newState</span> <span class="o">=</span> <span class="nx">actor</span><span class="p">.</span><span class="nx">collide</span><span class="p">(</span><span class="nx">newState</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">newState</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">Vec</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// FIFTEENTH function call</span>
+  <span class="c1">// this will return a NEW vector object position using the current x and y positions plus</span>
+  <span class="c1">// the new positions passed as a vector object in the method as 'other'</span>
+  <span class="nx">plus</span><span class="p">(</span><span class="nx">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">other</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">other</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">times</span><span class="p">(</span><span class="nx">factor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">factor</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">factor</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">Player</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">speed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pos</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">speed</span> <span class="o">=</span> <span class="nx">speed</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">get</span> <span class="nx">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">player</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kd">static</span> <span class="nx">create</span><span class="p">(</span><span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)),</span>
+                      <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Player</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">playerXSpeed</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">gravity</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">jumpSpeed</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+<span class="c1">// FOURTEENTH function call - called from state.update</span>
+<span class="c1">// this will be called EVERY time the player is moving</span>
+<span class="c1">// it is passed a timeStep, the current state, and the keys currently pressed down as an object</span>
+<span class="nx">Player</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">xSpeed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="c1">// if the left arrow is being pressed, speed will be negative (going backwards 7)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">ArrowLeft</span><span class="p">)</span> <span class="nx">xSpeed</span> <span class="o">-=</span> <span class="nx">playerXSpeed</span><span class="p">;</span>
+  <span class="c1">// if right arrow is pressed, speed will be positive (going forwards 7)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">ArrowRight</span><span class="p">)</span> <span class="nx">xSpeed</span> <span class="o">+=</span> <span class="nx">playerXSpeed</span><span class="p">;</span>
+
+  <span class="c1">// defines pos as the CURRENT position of the player</span>
+  <span class="c1">// pos is a vector object with an x and y coordinates as keys</span>
+  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+
+  <span class="c1">// this will define movedX by calling the plus method on the pos vector object</span>
+  <span class="c1">// it passes a new vector object as its argument with X equaling +7 or -7 multiplied by</span>
+  <span class="c1">// the time step</span>
+  <span class="kd">let</span> <span class="nx">movedX</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="nx">xSpeed</span> <span class="o">*</span> <span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+
+  <span class="c1">// by using where the player will move on the X axis, this checks if the player is touching a wall</span>
+  <span class="c1">// if touches returns false then the position is</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">state</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">touches</span><span class="p">(</span><span class="nx">movedX</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="dl">"</span><span class="s2">wall</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">pos</span> <span class="o">=</span> <span class="nx">movedX</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// I am assuming here that the posX and posY must be handled individually with each animation</span>
+  <span class="c1">// update</span>
+  <span class="kd">let</span> <span class="nx">ySpeed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">speed</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">time</span> <span class="o">*</span> <span class="nx">gravity</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">movedY</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ySpeed</span> <span class="o">*</span> <span class="nx">time</span><span class="p">));</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">state</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">touches</span><span class="p">(</span><span class="nx">movedY</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="dl">"</span><span class="s2">wall</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">pos</span> <span class="o">=</span> <span class="nx">movedY</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">ArrowUp</span> <span class="o">&amp;&amp;</span> <span class="nx">ySpeed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ySpeed</span> <span class="o">=</span> <span class="o">-</span><span class="nx">jumpSpeed</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">ySpeed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="nx">xSpeed</span><span class="p">,</span> <span class="nx">ySpeed</span><span class="p">));</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">Lava</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">speed</span><span class="p">,</span> <span class="nx">reset</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pos</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">speed</span> <span class="o">=</span> <span class="nx">speed</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">reset</span> <span class="o">=</span> <span class="nx">reset</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">get</span> <span class="nx">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">lava</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kd">static</span> <span class="nx">create</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ch</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">=</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ch</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">|</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ch</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">v</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nx">pos</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Lava</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="nx">Lava</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">collide</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">State</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span> <span class="nx">state</span><span class="p">.</span><span class="nx">actors</span><span class="p">,</span> <span class="dl">"</span><span class="s2">lost</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="nx">Lava</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">newPos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">speed</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">time</span><span class="p">));</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">state</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">touches</span><span class="p">(</span><span class="nx">newPos</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="dl">"</span><span class="s2">wall</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="nx">newPos</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">speed</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">reset</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">reset</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">reset</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">speed</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">reset</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Lava</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">pos</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">speed</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">class</span> <span class="nx">Coin</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="nx">basePos</span><span class="p">,</span> <span class="nx">wobble</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pos</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">basePos</span> <span class="o">=</span> <span class="nx">basePos</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">wobble</span> <span class="o">=</span> <span class="nx">wobble</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">get</span> <span class="nx">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">coin</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kd">static</span> <span class="nx">create</span><span class="p">(</span><span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">basePos</span> <span class="o">=</span> <span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">));</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Coin</span><span class="p">(</span><span class="nx">basePos</span><span class="p">,</span> <span class="nx">basePos</span><span class="p">,</span>
+                    <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Coin</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">);</span>
+<span class="nx">Coin</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">collide</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">filtered</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">actors</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">a</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">!=</span> <span class="k">this</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">status</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">status</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">filtered</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span><span class="nx">a</span> <span class="o">=&gt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">coin</span><span class="dl">"</span><span class="p">))</span> <span class="nx">status</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">won</span><span class="dl">"</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">State</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">level</span><span class="p">,</span> <span class="nx">filtered</span><span class="p">,</span> <span class="nx">status</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="nx">Coin</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wobble</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wobble</span> <span class="o">+</span> <span class="nx">time</span> <span class="o">*</span> <span class="nx">wobbleSpeed</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">wobblePos</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">wobble</span><span class="p">)</span> <span class="o">*</span> <span class="nx">wobbleDist</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">Coin</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">basePos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vec</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">wobblePos</span><span class="p">)),</span>
+                  <span class="k">this</span><span class="p">.</span><span class="nx">basePos</span><span class="p">,</span> <span class="nx">wobble</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">const</span> <span class="nx">levelChars</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="dl">"</span><span class="s2">.</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">empty</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">#</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">wall</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">+</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">lava</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">@</span><span class="dl">"</span><span class="p">:</span> <span class="nx">Player</span><span class="p">,</span> <span class="dl">"</span><span class="s2">o</span><span class="dl">"</span><span class="p">:</span> <span class="nx">Coin</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">=</span><span class="dl">"</span><span class="p">:</span> <span class="nx">Lava</span><span class="p">,</span> <span class="dl">"</span><span class="s2">|</span><span class="dl">"</span><span class="p">:</span> <span class="nx">Lava</span><span class="p">,</span> <span class="dl">"</span><span class="s2">v</span><span class="dl">"</span><span class="p">:</span> <span class="nx">Lava</span>
+<span class="p">};</span>
+
+<span class="c1">// SIXTH function to be run. It is called inside of drawGrid</span>
+<span class="c1">// elt is passed the name of the node to be created, an object containing styles to attach to</span>
+<span class="c1">// the created node, as well as children to attach to the created node</span>
+<span class="kd">function</span> <span class="nx">elt</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="p">...</span><span class="nx">children</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// dom is defined as a node created with document.createElement passed with the first argument</span>
+  <span class="kd">let</span> <span class="nx">dom</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+
+  <span class="c1">// if a styles object is passed, the styles are set on the node that was created</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">attr</span> <span class="k">of</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">attrs</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">dom</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">[</span><span class="nx">attr</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// if children are passed, each one will be attached to the node created</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">child</span> <span class="k">of</span> <span class="nx">children</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">dom</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">child</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// the created node is returned from this function</span>
+  <span class="k">return</span> <span class="nx">dom</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// FOURTH function to run - called inside runLevel</span>
+<span class="kd">class</span> <span class="nx">DOMDisplay</span> <span class="p">{</span>
+  <span class="c1">// this function will create the visual element of the game. It is passed the parent node</span>
+  <span class="c1">// (document.body) and the level (an object returned by the Level constructor)</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">level</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// this will set this.dom to html to be returned by elt, elt is passed a node name, styles for</span>
+    <span class="c1">// that node name, and a list of children to append to the node in the first argument</span>
+    <span class="c1">// in this instance, a div will be created with the class of game, and the table returned</span>
+    <span class="c1">// from drawGrid will be appended to that div</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dom</span> <span class="o">=</span> <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">div</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span><span class="na">class</span><span class="p">:</span> <span class="dl">"</span><span class="s2">game</span><span class="dl">"</span><span class="p">},</span> <span class="nx">drawGrid</span><span class="p">(</span><span class="nx">level</span><span class="p">));</span>
+
+    <span class="c1">// setting actorLayor to null, no actors have been added yet</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">actorLayer</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="c1">// the div with the level table inside will now be appended to the parent (document.body)</span>
+    <span class="nx">parent</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">clear</span><span class="p">()</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">remove</span><span class="p">();}</span>
+<span class="p">}</span>
+
+<span class="nx">DOMDisplay</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">syncState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">actorLayer</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">actorLayer</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">actorLayer</span> <span class="o">=</span> <span class="nx">drawActors</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">actors</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">actorLayer</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="s2">`game </span><span class="p">${</span><span class="nx">state</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">scrollPlayerIntoView</span><span class="p">(</span><span class="nx">state</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">DOMDisplay</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">scrollPlayerIntoView</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">clientWidth</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">clientHeight</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">margin</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+
+  <span class="c1">// The viewport</span>
+  <span class="kd">let</span> <span class="nx">left</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollLeft</span><span class="p">,</span> <span class="nx">right</span> <span class="o">=</span> <span class="nx">left</span> <span class="o">+</span> <span class="nx">width</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">top</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollTop</span><span class="p">,</span> <span class="nx">bottom</span> <span class="o">=</span> <span class="nx">top</span> <span class="o">+</span> <span class="nx">height</span><span class="p">;</span>
+
+  <span class="kd">let</span> <span class="nx">player</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">player</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">center</span> <span class="o">=</span> <span class="nx">player</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">plus</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+                         <span class="p">.</span><span class="nx">times</span><span class="p">(</span><span class="nx">scale</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">center</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">left</span> <span class="o">+</span> <span class="nx">margin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollLeft</span> <span class="o">=</span> <span class="nx">center</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">center</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">right</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollLeft</span> <span class="o">=</span> <span class="nx">center</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">margin</span> <span class="o">-</span> <span class="nx">width</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">center</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">top</span> <span class="o">+</span> <span class="nx">margin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollTop</span> <span class="o">=</span> <span class="nx">center</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">center</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">bottom</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">scrollTop</span> <span class="o">=</span> <span class="nx">center</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">margin</span> <span class="o">-</span> <span class="nx">height</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">const</span> <span class="nx">scale</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">wobbleSpeed</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="nx">wobbleDist</span> <span class="o">=</span> <span class="mf">0.07</span><span class="p">;</span>
+
+<span class="c1">// FIFTH function to run, called in DOMDisplay as an argument to elt</span>
+<span class="c1">// it will create the table grid that is used as the background of the level</span>
+<span class="kd">function</span> <span class="nx">drawGrid</span><span class="p">(</span><span class="nx">level</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// elt is a node creator. it will be called here to build the grid level background</span>
+  <span class="c1">// it is being called here with table as its first argument. A table will be the parent node</span>
+  <span class="c1">// of this function. It is passed styles for that parent node for the second argument. The third</span>
+  <span class="c1">// argument will be a spread out array created by calling elt on each 'row' of the array of rows</span>
+  <span class="c1">// in the level object. Each of those rows will also have cells created in them by calling ELT</span>
+  <span class="c1">// on each character in the array. EX. The following would be created from the example</span>
+  <span class="c1">//</span>
+  <span class="c1">// level.rows = [['empty','empty','empty']]</span>
+  <span class="c1">// &lt;table&gt;</span>
+  <span class="c1">// &lt;tr&gt;&lt;td class='empty'/&gt;&lt;td class='empty'/&gt;&lt;td class='empty'/&gt;&lt;tr/&gt;</span>
+  <span class="c1">// &lt;/table&gt;</span>
+  <span class="c1">//</span>
+  <span class="c1">// drawGrid returns a created table with a class of background based on the level object</span>
+  <span class="c1">// given to it.</span>
+  <span class="k">return</span> <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">table</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">class</span><span class="p">:</span> <span class="dl">"</span><span class="s2">background</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">style</span><span class="p">:</span> <span class="s2">`width: </span><span class="p">${</span><span class="nx">level</span><span class="p">.</span><span class="nx">width</span> <span class="o">*</span> <span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span>
+  <span class="p">},</span> <span class="p">...</span><span class="nx">level</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">row</span> <span class="o">=&gt;</span>
+    <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">tr</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span><span class="na">style</span><span class="p">:</span> <span class="s2">`height: </span><span class="p">${</span><span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span><span class="p">},</span>
+        <span class="p">...</span><span class="nx">row</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">type</span> <span class="o">=&gt;</span> <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">td</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span><span class="na">class</span><span class="p">:</span> <span class="nx">type</span><span class="p">})))</span>
+      <span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">drawActors</span><span class="p">(</span><span class="nx">actors</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">div</span><span class="dl">"</span><span class="p">,</span> <span class="p">{},</span> <span class="p">...</span><span class="nx">actors</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">actor</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">rect</span> <span class="o">=</span> <span class="nx">elt</span><span class="p">(</span><span class="dl">"</span><span class="s2">div</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span><span class="na">class</span><span class="p">:</span> <span class="s2">`actor </span><span class="p">${</span><span class="nx">actor</span><span class="p">.</span><span class="nx">type</span><span class="p">}</span><span class="s2">`</span><span class="p">});</span>
+    <span class="nx">rect</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">actor</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span><span class="p">;</span>
+    <span class="nx">rect</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">actor</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span><span class="p">;</span>
+    <span class="nx">rect</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">actor</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span><span class="p">;</span>
+    <span class="nx">rect</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">actor</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">scale</span><span class="p">}</span><span class="s2">px`</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">rect</span><span class="p">;</span>
+  <span class="p">}));</span>
+<span class="p">}</span>
+
+<span class="c1">// determines if any actors will overlap one another, returns true or false</span>
+<span class="kd">function</span> <span class="nx">overlap</span><span class="p">(</span><span class="nx">actor1</span><span class="p">,</span> <span class="nx">actor2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">actor1</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">actor1</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">&amp;&amp;</span>
+         <span class="nx">actor1</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">x</span> <span class="o">&amp;&amp;</span>
+         <span class="nx">actor1</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">actor1</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">&amp;&amp;</span>
+         <span class="nx">actor1</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">actor2</span><span class="p">.</span><span class="nx">size</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// TWELTH function to be called, called from arrowKeys</span>
+<span class="kd">function</span> <span class="nx">trackKeys</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// create an empty object</span>
+  <span class="kd">let</span> <span class="nx">down</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="c1">// defines a function that will track keys passed as array into trackKeys</span>
+  <span class="kd">function</span> <span class="nx">track</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// if any of the keys in the keys array are pressed down</span>
+    <span class="c1">// this function will add the key to the down object with the value of true or false</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keys</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">down</span><span class="p">[</span><span class="nx">event</span><span class="p">.</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">;</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// adds event listeners to the window to track keypresses</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="nx">track</span><span class="p">);</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">,</span> <span class="nx">track</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">down</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// ELEVENTH funcion to be called, called inside of runAnimation's anonymous function</span>
+<span class="c1">// returns an object</span>
+<span class="kd">const</span> <span class="nx">arrowKeys</span> <span class="o">=</span>
+  <span class="c1">// calls trackKeys with the keys to be looking for</span>
+  <span class="nx">trackKeys</span><span class="p">([</span><span class="dl">"</span><span class="s2">ArrowLeft</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">ArrowRight</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">ArrowUp</span><span class="dl">"</span><span class="p">]);</span>
+
+<span class="c1">// NINTH function to be run? called inside of a promise function in runLevel</span>
+<span class="kd">function</span> <span class="nx">runAnimation</span><span class="p">(</span><span class="nx">frameFunc</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// lastTime is set to null, it isnt defined yet</span>
+  <span class="kd">let</span> <span class="nx">lastTime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="c1">// the requestAnimationFrame callback with time argument, will be populated by</span>
+  <span class="c1">// requestAnimationFrame</span>
+  <span class="kd">function</span> <span class="nx">frame</span><span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">lastTime</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// calculates the time between this request call and the last</span>
+      <span class="kd">let</span> <span class="nx">timeStep</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">time</span> <span class="o">-</span> <span class="nx">lastTime</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+
+      <span class="c1">// uses the timeStep to call frameFunc, the anonymous function defined in runLevel</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">frameFunc</span><span class="p">(</span><span class="nx">timeStep</span><span class="p">)</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// on first call, sets time to the time the first requestAnimationFrame was called</span>
+    <span class="nx">lastTime</span> <span class="o">=</span> <span class="nx">time</span><span class="p">;</span>
+    <span class="c1">// will be called again</span>
+    <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">frame</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// this calls window.requestAnimationFrame with the frame function as its argument, and will</span>
+  <span class="c1">// be passed an integer as the current time</span>
+  <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">frame</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// THIRD function to run</span>
+<span class="kd">function</span> <span class="nx">runLevel</span><span class="p">(</span><span class="nx">level</span><span class="p">,</span> <span class="nx">Display</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// defining the display by running the function passed to the second argument to runLevel</span>
+  <span class="c1">// ie. DOMDisplay</span>
+  <span class="kd">let</span> <span class="nx">display</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Display</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="nx">level</span><span class="p">);</span>
+
+  <span class="c1">// The state.start method will be called here</span>
+  <span class="kd">let</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">State</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">level</span><span class="p">);</span>
+
+  <span class="c1">// not sure what is happening here yet</span>
+  <span class="kd">let</span> <span class="nx">ending</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="c1">// run level will return a promise here</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+    <span class="c1">// run animation will be called with an anonymous function to be run inside of runAnimation</span>
+    <span class="c1">// upon timestep being defined in runAnimation, this anonymous function will be called</span>
+    <span class="c1">// TENTH function ?</span>
+    <span class="nx">runAnimation</span><span class="p">(</span><span class="nx">time</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// timeStep is passed as the time argument</span>
+      <span class="c1">// state.update will be called with the time</span>
+      <span class="c1">// and arrowKeys (an object of what keys are pressed)</span>
+      <span class="nx">state</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">arrowKeys</span><span class="p">);</span>
+      <span class="nx">display</span><span class="p">.</span><span class="nx">syncState</span><span class="p">(</span><span class="nx">state</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">status</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">playing</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ending</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ending</span> <span class="o">-=</span> <span class="nx">time</span><span class="p">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">display</span><span class="p">.</span><span class="nx">clear</span><span class="p">();</span>
+        <span class="nx">resolve</span><span class="p">(</span><span class="nx">state</span><span class="p">.</span><span class="nx">status</span><span class="p">);</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// FIRST function to run</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">runGame</span><span class="p">(</span><span class="nx">plans</span><span class="p">,</span> <span class="nx">Display</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">lives</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="c1">// this for loop cycles through to plans array to execute runLevel on each level plan in the array</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">level</span> <span class="o">&lt;</span> <span class="nx">plans</span><span class="p">.</span><span class="nx">length</span><span class="p">;)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">lives</span><span class="p">)</span>
+  <span class="c1">// status will be set according the promise that runLevel returns. Since runLevel is a time based</span>
+  <span class="c1">// game, the promise returned must be placed on player inputs over time. So this function will</span>
+  <span class="c1">// pretty much be stopped, waiting on the player to complete or lose the level before it continues</span>
+
+  <span class="c1">// runLevel accepts a level and a display</span>
+  <span class="kd">let</span> <span class="nx">status</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">runLevel</span><span class="p">(</span><span class="k">new</span> <span class="nx">Level</span><span class="p">(</span><span class="nx">plans</span><span class="p">[</span><span class="nx">level</span><span class="p">]),</span>
+                              <span class="nx">Display</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">won</span><span class="dl">"</span><span class="p">)</span> <span class="nx">level</span><span class="o">++</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">lost</span><span class="dl">"</span><span class="p">)</span> <span class="nx">lives</span><span class="o">--</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">You've won!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

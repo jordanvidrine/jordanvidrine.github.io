@@ -45,6 +45,45 @@
   <ul>
     
     <li>
+      <h2>August 20th Part 2</h2>
+      <p><h3 id="eloquent-javascript-chapter-16"><strong>Eloquent Javascript Chapter 16</strong></h3>
+<p>In my previous post, I wrote about the resources I have been and continue to use while learning Javascript. One of the best ones has been Eloquent Javascript.</p>
+
+<p>The latest chapter was tough, but the more I sat with it and examined the code line by line, as well as inside of a debugger, the more I understood what was going on. I went through all of the code of the chapter and ran it in the FireFox Developer debugger OVER AND OVER again! Each time I had a realization, I commented near the line of code what was happening.</p>
+
+<p>I feel like I have a pretty good handle of how the code now works and what exactly is happening behind the scenes. I believe what I am most impressed with about this chapter, and the book in general, is just how much can be done with PURE javascript.</p>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-20th-Part-2.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
+      <h2>August 20th 2019</h2>
+      <p><p>Today I want to make two posts. The first of which (this one) will document what materials and courses I have been going through this year. I’ll list them out in the order that I went through them in case you’d like to do the same. It has been a steady progression of difficulty and I feel like I have learned a lot. It has not been without its ups and downs as well as pretty difficult moments, but these courses have helped solidify a lot of javascript for me.</p>
+
+<h3 id="freecodecamp"><a href="https://learn.freecodecamp.org/">FreeCodeCamp</a></h3>
+<p><strong>Javascript Algorithms and Data Structures Certification (Eq. 300 Hours)</strong></p>
+<ol>
+  <li>Basic Javascript</li>
+  <li>ES6</li>
+  <li>Regular Expressions</li>
+  <li>Debugging</li>
+  <li>Basic Data Structures</li>
+  <li>Basic Algorithm Scripting</li>
+  <li>Functional Programming</li>
+  <li>Intermediate Algorithm Scripting</li>
+  <li>Javascript Algorithms and Data Structures Projects</li>
+</ol>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-20th-2019.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h2>August 19th 2019</h2>
       <p><p>Today we will be learning how to send emails inside of nodeJS, using env variables (which I learned a couple weeks back), creating a production MongoDB database, as well as getting into testing inside of nodeJS. (this is something I am eager to get into, as there hasnt been any debugging yet)</p>
 
@@ -415,53 +454,6 @@ Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-1
 </p>
       
       <a id='read-more' href="/2019/07/July-22nd-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 14th & 15th 2019</h2>
-      <p><p>I spent yesterday and this morning getting deeper with working with MongoDB. I really enjoy using mongoose.js to interface with the mongo database as well. I spent time implementing my own CRUD operations, sending get and post requests to my own express app on the backend.</p>
-
-<p>This morning, after realizing that git version control wasnt working with my database folder for the app I am working on, I migrated my database over to MongoDB Atlas. This is a cloud database that offers a couple free tier options. I like the UI for the site as well as the ability to access the database from any computer I will be working from.</p>
-
-<p>The implementation was extremely simple as well.</p>
-
-<p>I am now going to go through a couple more videos from the NodeJS course. At this time I am 61% complete and I feel like I have learned a pretty large amount of tools.</p>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-14th-&-15th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 13th 2019</h2>
-      <p><p>So Hurricane Barry is making its way to land. Im posted up at my parents house in case the power back home goes out. I’ve been reading a bit of SICP which apparently is a computer programmer’s/CS Major’s dream book. I’ve also been going through MIT lectures on the book and I find it very interesting.</p>
-
-<p>The language it will be focused on is a dialect of Lisp called Scheme. This all comes recommended to my by a friend who’s has his degree in CS. I think it’s a good reccomendation as the book is going through the basic building blocks of what programs are, of what interpreters are, and what is actually going on behind the scenes when we write programs. I love this type of stuff, taking it all apart is so interesting to me.</p>
-
-<p>Anyway! That being said, I felt it necessary to also go back to the Regex section of Eloquent Javascript. Why? Because in it is a section on writing a parsing function that interprets an INI file using regex statements. Here is the example the book gives.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseINI</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Start with an object to hold the top-level fields</span>
-  <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">{};</span>
-  <span class="kd">let</span> <span class="nx">section</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>
-  <span class="nx">string</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="sr">/</span><span class="se">\r?\n</span><span class="sr">/</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">line</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">match</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">match</span> <span class="o">=</span> <span class="nx">line</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">(\w</span><span class="sr">+</span><span class="se">)</span><span class="sr">=</span><span class="se">(</span><span class="sr">.*</span><span class="se">)</span><span class="sr">$/</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">section</span><span class="p">[</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">match</span> <span class="o">=</span> <span class="nx">line</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">\[(</span><span class="sr">.*</span><span class="se">)\]</span><span class="sr">$/</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">section</span> <span class="o">=</span> <span class="nx">result</span><span class="p">[</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{};</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/^</span><span class="se">\s</span><span class="sr">*</span><span class="se">(</span><span class="sr">;.*</span><span class="se">)?</span><span class="sr">$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">line</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">"</span><span class="s2">Line '</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">line</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">' is not valid.</span><span class="dl">"</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">});</span>
-  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-13th-2019.html#posts">Read More...</a>
       
     </li>
     

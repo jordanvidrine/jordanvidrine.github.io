@@ -343,6 +343,8 @@ span {
       #posts ul li pre {
         padding: 15px;
         overflow: scroll; }
+  #posts ol li {
+    margin: 0 0 5px 0; }
 
 @media only screen and (max-width: 700px) {
   #bio {

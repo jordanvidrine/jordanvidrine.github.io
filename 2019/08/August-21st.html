@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - August 21st</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="/assets/img/profile.jpg">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>August 21st</h2>
+    <h3 id="testing-in-node-with-jest">Testing in Node with Jest</h3>
+<p>For the last part of the day yesterday I began going through the testing part of the node course I am taking. I love the idea of testing and am eager to continue to learn how to use Jest in reference to node, express, and a working database.</p>
+
+<p>Yesterday we walked through setting up a test environment, a test database, and refactoring our call to express for us to be able to use it in a testing suite. We installed Jest, as well as Supertest (helps testing with express routes without creating a server) from the NPM library.</p>
+
+<p>A jest test looks like this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">calculateTip</span> <span class="o">=</span> <span class="p">(</span><span class="nx">total</span><span class="p">,</span> <span class="nx">tipPercent</span> <span class="o">=</span> <span class="p">.</span><span class="mi">25</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">total</span> <span class="o">+</span> <span class="p">(</span><span class="nx">total</span> <span class="o">*</span> <span class="nx">tipPercent</span><span class="p">);</span>
+
+<span class="c1">// Jest gives us the global variable of test, so no need to require anything</span>
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should calculate total with tip</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">calculateTip</span><span class="p">(</span><span class="mi">10</span><span class="p">,.</span><span class="mi">3</span><span class="p">)</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">total</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="p">})</span>
+
+</code></pre></div></div>
+<!--more-->
+<p>This test would pass. Jest also works for Async programming as well. An async test will look similar to this.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">reject</span><span class="p">(</span><span class="dl">'</span><span class="s1">Numbers must be non-negative</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nx">resolve</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">)</span>
+    <span class="p">},</span><span class="mi">2000</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should add two numbers async/await</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">sum</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">22</span><span class="p">)</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">sum</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="jest-lifecycle-methods">Jest lifecycle methods</h4>
+<p>Because each test in our task app will create documents in our mongo database, we need to be able to clear the db after each test runs. An issue we learned we would encounter if we didnt do this would be as follows:</p>
+
+<p><strong>I test that a user is created in my db.</strong><br />
+This test can only run once correctly then would fail on subsequent attempts. Our code specifies no duplicate emails can exist in the user document, but the test is trying to create the same user on each pass.</p>
+
+<p>To fix this we will use Jest Lifecycle Methods to run code before and after a test case.</p>
+
+<p>We can add the following code to our test suite and define what we would like to do before and after each test we will be running.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">beforeEach</span><span class="p">(()</span><span class="o">=&gt;</span><span class="p">{</span>
+  <span class="c1">// your code here</span>
+<span class="p">})</span>
+
+<span class="nx">afterEach</span><span class="p">(()</span><span class="o">=&gt;</span><span class="p">{</span>
+  <span class="c1">// your code here</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">This will be a test</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// testing code here</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Using supertest, which is SUPER COOL, because it uses the express routers to test the routes without having to create a server. This is interesting to me because it essentially seems to show me that Express is just a bunch of methods on a class that point to different things.</p>
+
+<p>Anyway, heres the code we have created so far in testing our user routes and data:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">supertest</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../src/app</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../src/models/user</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="c1">// fake user data</span>
+<span class="kd">const</span> <span class="nx">userOne</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User One</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">userOne@user.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1qaz7ujm</span><span class="dl">'</span>
+<span class="p">}</span>
+
+<span class="c1">// before each test, this function will clear the database as well as create a dummy user for us to use for other tests</span>
+<span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">()</span>
+  <span class="k">await</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nx">userOne</span><span class="p">).</span><span class="nx">save</span><span class="p">()</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should signup a new user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users</span><span class="dl">'</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1qaz7ujm</span><span class="dl">'</span>
+  <span class="p">}).</span><span class="nx">expect</span><span class="p">(</span><span class="mi">201</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should login existing user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/login</span><span class="dl">'</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="nx">userOne</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="nx">userOne</span><span class="p">.</span><span class="nx">password</span>
+  <span class="p">}).</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should not login nonexistent user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/login</span><span class="dl">'</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">badUser@user.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">nonexistent</span><span class="dl">'</span>
+  <span class="p">}).</span><span class="nx">expect</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h4 id="testing-with-authentication">Testing with authentication</h4>
+<p>To be able to test authentication on users in our express app, we will need to include jwt and mongoose into our test suite. For our fake user we use to test, we create a token inside of the tokens array typically saved to a user object. To get this token, we will need an ID generated by mongoose. We do this like so:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">userOneId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">()</span>
+<span class="kd">const</span> <span class="nx">userOne</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">_id</span><span class="p">:</span> <span class="nx">userOneId</span><span class="p">,</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User One</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">userOne@user.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1qaz7ujm</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">tokens</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="na">token</span><span class="p">:</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span> <span class="na">_id</span><span class="p">:</span> <span class="nx">userOneId</span> <span class="p">},</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">)</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now we are all set to test our authentication in our app. Here is an example test for testing if a user is authenticated to read his/her profile as well as a test to show that a user cannot get their profile if they are not logged in (has a token in their token array).</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should get profile for user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">,</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">userOne</span><span class="p">.</span><span class="nx">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">send</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should not get profile for unauthenticated user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">send</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h4 id="advanced-assertions">Advanced assertions</h4>
+<p>Currently, we are only testing based on the status code that is sent back to the user. To get more in depth with our tests, it would be nice to get the response back, and run some tests on that. We can do that! The following code will save the response and then we can use that to get data from the database, making sure the user was created.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should signup a new user</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users</span><span class="dl">'</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan@jordanvidrine.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1qaz7ujm</span><span class="dl">'</span>
+  <span class="p">}).</span><span class="nx">expect</span><span class="p">(</span><span class="mi">201</span><span class="p">)</span>
+
+  <span class="c1">// Assert that the database was changed correctly</span>
+  <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">_id</span><span class="p">)</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBeNull</span><span class="p">()</span>
+
+<span class="p">})</span>
+</code></pre></div></div>
+<p>Jest also allows us to test if objects match by an object we pass into it. It checks to see if the keys and values we pass are in the object we are testing. If the object contains those items it is considered a match, even if other info is also there.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toMatchObject</span><span class="p">({</span>
+  <span class="na">user</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jordan@jordanvidrine.com</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">token</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">token</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>This was my first real time using Jest or testing inside of node since taking this course. I have to say I really like the idea of all of this and how Jest seems to be working. Throughout this course I have fallen in love with back end web dev and its stuff like this that I find so interesting.</p>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

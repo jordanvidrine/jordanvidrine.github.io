@@ -45,6 +45,32 @@
   <ul>
     
     <li>
+      <h2>August 21st</h2>
+      <p><h3 id="testing-in-node-with-jest">Testing in Node with Jest</h3>
+<p>For the last part of the day yesterday I began going through the testing part of the node course I am taking. I love the idea of testing and am eager to continue to learn how to use Jest in reference to node, express, and a working database.</p>
+
+<p>Yesterday we walked through setting up a test environment, a test database, and refactoring our call to express for us to be able to use it in a testing suite. We installed Jest, as well as Supertest (helps testing with express routes without creating a server) from the NPM library.</p>
+
+<p>A jest test looks like this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">calculateTip</span> <span class="o">=</span> <span class="p">(</span><span class="nx">total</span><span class="p">,</span> <span class="nx">tipPercent</span> <span class="o">=</span> <span class="p">.</span><span class="mi">25</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">total</span> <span class="o">+</span> <span class="p">(</span><span class="nx">total</span> <span class="o">*</span> <span class="nx">tipPercent</span><span class="p">);</span>
+
+<span class="c1">// Jest gives us the global variable of test, so no need to require anything</span>
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should calculate total with tip</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">calculateTip</span><span class="p">(</span><span class="mi">10</span><span class="p">,.</span><span class="mi">3</span><span class="p">)</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">total</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="p">})</span>
+
+</code></pre></div></div>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-21st.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h2>August 20th Part 2</h2>
       <p><h3 id="eloquent-javascript-chapter-16"><strong>Eloquent Javascript Chapter 16</strong></h3>
 <p>In my previous post, I wrote about the resources I have been and continue to use while learning Javascript. One of the best ones has been Eloquent Javascript.</p>
@@ -440,20 +466,6 @@ Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-1
 </p>
       
       <a id='read-more' href="/2019/07/July-23rd-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 22nd 2019</h2>
-      <p><p>Got back from vacation last night FULLY relaxed and ready to get back into the daily grind. While on the trip I put in an hour or two here and there working through codewars.com exercises and puzzles. Fun stuff.</p>
-
-<p>This morning I started the day off with rehashing what I learned on my last coding day. I also implemented a couple of new features into the site I am working on.</p>
-
-<p>I added an admin panel that shows me what ‘items’ users have submitted. It then shows me if they are approved or unapproved, as well as gives me the ability to delete any item. This is VERY similar to MANY todolist tutorials and I can see why those tutorials are so important. Basically everything on the web is a TODO list type item.</p>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-22nd-2019.html#posts">Read More...</a>
       
     </li>
     

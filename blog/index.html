@@ -45,6 +45,29 @@
   <ul>
     
     <li>
+      <h2>August 26th</h2>
+      <p><p>This morning I am going through chapter 18 of Eloquent Javascript. (almost done with this book!) The chapter focuses on HTTP requests, html forms, as well as javascript’s fetch function.</p>
+
+<p>I’ve worked with fetch in a couple of my own projects, to make calls to me own API on routes being served up by Express. Let’s dive in.</p>
+
+<h3 id="fetch">Fetch</h3>
+<p>Calling <code class="highlighter-rouge">fetch</code>  returns a promise that resolves to a response object containing information about the server’s response.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">example/data.txt</span><span class="dl">"</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">);</span>
+  <span class="c1">// → 200</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">"</span><span class="s2">Content-Type</span><span class="dl">"</span><span class="p">));</span>
+  <span class="c1">// → text/plain</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+</p>
+      
+      <a id='read-more' href="/2019/08/August-26th.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h2>August 21st</h2>
       <p><h3 id="testing-in-node-with-jest">Testing in Node with Jest</h3>
 <p>For the last part of the day yesterday I began going through the testing part of the node course I am taking. I love the idea of testing and am eager to continue to learn how to use Jest in reference to node, express, and a working database.</p>
@@ -452,20 +475,6 @@ Groceries -12.34 Wal-Mart // Your transaction with Wal Mart in the amount of $-1
 </p>
       
       <a id='read-more' href="/2019/07/July-24th-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 23rd 2019</h2>
-      <p><p>Today I pushed my app in development to Heroku for testing and to show a couple of friends. It is now live at <a href="http://jbv-drawing-prompt-app.herokuapp.com">jbv-drawing-prompt-app.herokuapp.com</a></p>
-
-<p>During the process I encountered a couple of CORS issues as well as some database connection issues. It made me glad that I added a console log to the mongodb connection JS file that either alerts ‘Connected To Dabase’ or ‘Could not connect to database’</p>
-
-<p>I got everything to work by doing the following:</p>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-23rd-2019.html#posts">Read More...</a>
       
     </li>
     

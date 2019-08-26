@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jordan Vidrine Coding Journal - August 26th</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="/assets/css/page-styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id='title-nav'>
+      <h1>Coding Journal</h1>
+      <nav>
+  
+  
+    <a href="/" >
+      Home
+    </a>
+    
+  
+    <a href="/blog" >
+      Blog
+    </a>
+    
+  
+    <a href="https://www.linkedin.com/in/jordan-b-vidrine/" >
+      LinkedIn
+    </a>
+    
+</nav>
+
+      <div id='bio'>
+              <img src="/assets/img/profile.jpg">
+        <h3>Jordan Vidrine</h3>
+        <span>Daily Coding Journal</span>
+        <p>
+          An experienced business owner + musician with a demonstrated history of management in the
+          Energy sector and an insatiable appetite for learning new and complex skills. Transitioning
+          from an ownership role & seeking employment in Web Development as a Jr Full Stack Developer.
+        </p>
+      </div>
+    </div>
+    <div id="posts">
+    <div id="content">
+    <h2>August 26th</h2>
+    <p>This morning I am going through chapter 18 of Eloquent Javascript. (almost done with this book!) The chapter focuses on HTTP requests, html forms, as well as javascript’s fetch function.</p>
+
+<p>I’ve worked with fetch in a couple of my own projects, to make calls to me own API on routes being served up by Express. Let’s dive in.</p>
+
+<h3 id="fetch">Fetch</h3>
+<p>Calling <code class="highlighter-rouge">fetch</code>  returns a promise that resolves to a response object containing information about the server’s response.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">example/data.txt</span><span class="dl">"</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">);</span>
+  <span class="c1">// → 200</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">"</span><span class="s2">Content-Type</span><span class="dl">"</span><span class="p">));</span>
+  <span class="c1">// → text/plain</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<!--more-->
+<p><strong>NOTE:</strong> The promise returned by <code class="highlighter-rouge">fetch</code> resolves even if the server responded with an error code. It may be rejected if there is a network error, or the address can’t be found.</p>
+
+<p>To get the actual content of a response you can use its <code class="highlighter-rouge">text</code> method, or a similar method called <code class="highlighter-rouge">json</code> (which is what I’ve always used). The <code class="highlighter-rouge">json</code> method though only resolves if it can parse as valid JSON.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">example/data.txt</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">resp</span> <span class="o">=&gt;</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">text</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">text</span><span class="p">));</span>
+<span class="c1">// → This is the content of data.txt</span>
+
+<span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">example/data.txt</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">resp</span> <span class="o">=&gt;</span> <span class="nx">resp</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
+  <span class="p">{</span> <span class="c1">// data shown here }</span>
+</code></pre></div></div>
+<p>By default, <code class="highlighter-rouge">fetch</code> uses the <code class="highlighter-rouge">GET</code> method, but you can pass an object with extra options as a second argument to use others.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">example/data.txt</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span><span class="na">method</span><span class="p">:</span> <span class="dl">"</span><span class="s2">DELETE</span><span class="dl">"</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">resp</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">resp</span><span class="p">.</span><span class="nx">status</span><span class="p">);</span>
+  <span class="c1">// → 405</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Other than this, this chapter is pretty straight forward when it comes to html forms. I haven’t seen anything I didnt already know.</p>
+
+<p>Except…</p>
+
+<h3 id="file-fields">File Fields</h3>
+<p>If a user selects a file for a file input field, the browser interprets that action to mean that the script may read the file. This will log to the console the name of the file chosen, as well as the file type if one is present.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">file</span><span class="dl">"</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+  <span class="kd">let</span> <span class="nx">input</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">input</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">change</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">file</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">You chose</span><span class="dl">"</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">It has type</span><span class="dl">"</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+<p>The file form field though does not have a property that contains the content of the file. Getting that is a little more involved, and must be asynchronous to avoid the document freezing up.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">file</span><span class="dl">"</span> <span class="nx">multiple</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+  <span class="kd">let</span> <span class="nx">input</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">input</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">change</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">file</span> <span class="k">of</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">files</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+      <span class="nx">reader</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">"</span><span class="s2">load</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">File</span><span class="dl">"</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="dl">"</span><span class="s2">starts with</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">reader</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">));</span>
+      <span class="p">});</span>
+      <span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre></div></div>
+<p>Reading a file is done by creating a <code class="highlighter-rouge">FileReader</code> object, calling a “load” event handler on it, and then calling its <code class="highlighter-rouge">readAsText</code> method. Once finished loading, the reader’s <code class="highlighter-rouge">result</code> property contains the file’s content.</p>
+
+<p>File readers also throw an error event when reading the file fails for any reason. The error will end up in the objects error property. Since this interface was designed before promises came into the picture, we can wrap these in a promise ourselves.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">readFileText</span><span class="p">(</span><span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileReader</span><span class="p">();</span>
+    <span class="nx">reader</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
+      <span class="dl">"</span><span class="s2">load</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">resolve</span><span class="p">(</span><span class="nx">reader</span><span class="p">.</span><span class="nx">result</span><span class="p">));</span>
+    <span class="nx">reader</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
+      <span class="dl">"</span><span class="s2">error</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">reject</span><span class="p">(</span><span class="nx">reader</span><span class="p">.</span><span class="nx">error</span><span class="p">));</span>
+    <span class="nx">reader</span><span class="p">.</span><span class="nx">readAsText</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="storing-data-client-side">Storing data client-side</h3>
+<p>In this section the book covers the <code class="highlighter-rouge">localStorage</code> object available to us in the browser to store information outside of javascript variables in order to survive page reloads.</p>
+
+<pre><code class="language-Javascript">localStorage.setItem("username", "marijn");
+console.log(localStorage.getItem("username"));
+// → marijn
+localStorage.removeItem("username");
+</code></pre>
+<p>Values in localStorage stick around until overwritten, removed with <code class="highlighter-rouge">removeItem</code> or the user clears their local data.</p>
+
+<p>Another important thing is that sites from different domains get different storage compartments. In principle, info stored to the <code class="highlighter-rouge">localStorage</code> for a certain website, can only be read by the scripts on that website.</p>
+
+<p>This chapter was pretty straightforward and was a nice summary of thing’s I’ve learned throughout my dev journey… Now onto the Usemy Node Course.</p>
+
+<h3 id="mocking-npm-modules-during-testing">Mocking NPM Modules during testing</h3>
+<p>When running in a test environment, we may be running code that doesnt need to run in the background. For instance, if we are sending emails with sendGrid, our tests would continuously be sending out emails.</p>
+
+<p>To start, we will create a <strong>mocks</strong> folder in our test directory. Jest will look here for any modules and use them as mocks if they are present. If I wanted to mock jsonwebtoken, I would then create jsonwebtokens.js in the mock directory.</p>
+
+<p>We will be mocking the sendgrid mail module. To do this, we create a folder called <code class="highlighter-rouge">sendgrid</code> inside of mocks, and a file called <code class="highlighter-rouge">mail.js</code> inside that folder.</p>
+
+<p>We then need to provide our own versions of what the module is giving us. Not completely, just enough code to where our tests do not fail because methods don’t exist. The functions we provide literally don’t need to do anything as long as that doesn’t affect the actual thing you are trying to test.</p>
+
+<h3 id="testing-file-uploads">Testing file uploads</h3>
+<p>We will want to test the file upload for our user avatar. The user should be able to upload an avatar image and we need to validate that with supertest. When a file is uploaded, a buffer should be stored in the user file on the db.</p>
+
+<p>To start, we will create a folder in our testing directory called <code class="highlighter-rouge">fixtures</code>. Fixtures are items that our tests can use to validate tests. We will place an image here to use as our test image for the avatar.</p>
+
+<p>Here is how that test looks:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should upload avatar image</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me/avatar</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">,</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">userOne</span><span class="p">.</span><span class="nx">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attach</span><span class="p">(</span><span class="dl">'</span><span class="s1">avatar</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">tests/fixtures/profile-pic.jpg</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+      <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">userOneId</span><span class="p">)</span>
+      <span class="c1">// here we check that the data stored at user.avatar IS indeed buffer data</span>
+      <span class="c1">// expect.any() takes a type that you want to check</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">avatar</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">expect</span><span class="p">.</span><span class="nx">any</span><span class="p">(</span><span class="nx">Buffer</span><span class="p">))</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>The following two tests test that the user can 1) Update valid user fields, and 2) NOT update invalid user fields.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should update valid user fields</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">,</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">userOne</span><span class="p">.</span><span class="nx">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+        <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Jordan</span><span class="dl">'</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+      <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">userOneId</span><span class="p">)</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Jordan</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should not update invalid user fields</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/me</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">,</span> <span class="s2">`Bearer </span><span class="p">${</span><span class="nx">userOne</span><span class="p">.</span><span class="nx">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">token</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+        <span class="na">location</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Tennessee</span><span class="dl">'</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>To move on to the tasks test section of the course, we will have to do some refactoring of the code that creates our test user + test db.</p>
+
+<p>We create a new file called <code class="highlighter-rouge">db.js</code> in our <code class="highlighter-rouge">fixtures</code> directory. We will move the code that created our user data into here, as we will need this for other testing suites we set up. We will setup the following code in that db file and export it for other testing suites to use, as well as using the function we create in their <code class="highlighter-rouge">beforeEach()</code> calls.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">jwt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">jsonwebtoken</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">mongoose</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../../src/models/user</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">userOneId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">()</span>
+<span class="kd">const</span> <span class="nx">userOne</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">_id</span><span class="p">:</span> <span class="nx">userOneId</span><span class="p">,</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User One</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="dl">'</span><span class="s1">userOne@user.com</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1qaz7ujm</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">tokens</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="na">token</span><span class="p">:</span> <span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">({</span> <span class="na">_id</span><span class="p">:</span> <span class="nx">userOneId</span> <span class="p">},</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">JWT_SECRET</span><span class="p">)</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">setupDatabase</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">User</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">()</span>
+  <span class="k">await</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nx">userOne</span><span class="p">).</span><span class="nx">save</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">userOneId</span><span class="p">,</span>
+  <span class="nx">userOne</span><span class="p">,</span>
+  <span class="nx">setupDatabase</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now this isn’t all we have to do. Since Jest runs all of these test suites at the same time, each suite is trying to create and manipulate the database and this causes issues between the suites. To fix this, we just add a simple <code class="highlighter-rouge">--runInBand</code> to the test script in our <code class="highlighter-rouge">package.json</code> file. This will cause each test suite to run on its own.</p>
+
+<p>Now we are free to create more tests in each suite without their before or after scripts affecting one another.</p>
+
+    <a id='back' href="/blog/index.html">Back to blog...</a>
+  </div>
+    </div>
+    <footer>
+<p>Created with Jekyll by Jordan Vidrine - <a href="https://www.linkedin.com/in/jordan-b-vidrine/">LinkedIn</a> - <a href="https://github.com/jordanvidrine">GitHub</a></p>
+</footer>
+</section>
+
+
+  </body>
+</html>

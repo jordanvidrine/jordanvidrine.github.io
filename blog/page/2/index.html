@@ -45,6 +45,34 @@
   <ul>
     
     <li>
+      <h2>July 24th 2019</h2>
+      <p><p>Today I will be going back to the NodeJS course as I feel like I have been able to implement everything I’ve learned thus far on my own with the Drawing App.</p>
+
+<h4 id="logging-out">Logging Out</h4>
+<p>Below we setup a route to log a user out. This simply authenticates the user using an auth middleware we wrote previously. Once the user is authenticated, it checks the users list of active tokens and removes the one currently saved to the req method, which was saved there during their authentication.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users/logout</span><span class="dl">'</span><span class="p">,</span> <span class="nx">auth</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">token</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">token</span><span class="p">.</span><span class="nx">token</span> <span class="o">!==</span> <span class="nx">req</span><span class="p">.</span><span class="nx">token</span>
+    <span class="p">})</span>
+
+    <span class="k">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<p>To ‘Log Out from All Locations’ we simply remove ALL of the tokens from the token array stored in the User object, rather than the only ‘active’ one. We can do this by setting the user’s tokens to an empty array like so. <code class="highlighter-rouge">req.user.tokens = []</code></p>
+
+</p>
+      
+      <a id='read-more' href="/2019/07/July-24th-2019.html#posts">Read More...</a>
+      
+    </li>
+    
+    <li>
       <h2>July 23rd 2019</h2>
       <p><p>Today I pushed my app in development to Heroku for testing and to show a couple of friends. It is now live at <a href="http://jbv-drawing-prompt-app.herokuapp.com">jbv-drawing-prompt-app.herokuapp.com</a></p>
 
@@ -452,27 +480,6 @@
 </p>
       
       <a id='read-more' href="/2019/07/July-2nd-2019.html#posts">Read More...</a>
-      
-    </li>
-    
-    <li>
-      <h2>July 1st 2019</h2>
-      <p><p>I have decided to reformat most if not all journal entries from today foward to act more like a note taking platform and a more detailed description of what I am learning. I will be updating throughout my day, rather than at the end of the day.</p>
-
-<p>This morning I went through a couple more hours of the Node.js course, and dove into MongoDB and how to get mongodb up and running in a node application and how to perform CRUD operations. I also learned how to utilize Promises, rather than proving a callback to each method, which makes things a lot less convoluted and easier to understand.</p>
-
-<p>For example purposes lets pretend all of the following code is nested inside of the following call to MongoClient.connect The calls to console in the Then and Catch statements are for debugging purposes only.</p>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">MongoClient</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">connectionURL</span><span class="p">,</span> <span class="p">{</span><span class="na">useNewUrlParser</span><span class="p">:</span> <span class="kc">true</span><span class="p">},</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">client</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unable to connect to database!</span><span class="dl">'</span><span class="p">)</span>
-  <span class="p">}</span>
-  <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">db</span><span class="p">(</span><span class="nx">databaseName</span><span class="p">)</span>
-</code></pre></div></div>
-
-</p>
-      
-      <a id='read-more' href="/2019/07/July-1st-2019.html#posts">Read More...</a>
       
     </li>
     

@@ -81,38 +81,38 @@ var App = function (_React$Component) {
       soundBank: [{
         title: 'Hip-Hop Kit',
         sounds: {
-          q: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/kick.wav',
-          w: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/snare.wav',
-          e: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/closed-hh.wav',
-          r: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/open-hh.wav',
-          a: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/clap.wav',
-          s: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/perc.wav',
-          d: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/tom-1.wav',
-          f: 'http://jordanvidrine.com/soundbanks/lofi-hiphop/tom-2.wav'
+          q: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/kick.wav',
+          w: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/snare.wav',
+          e: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/closed-hh.wav',
+          r: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/open-hh.wav',
+          a: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/clap.wav',
+          s: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/perc.wav',
+          d: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/tom-1.wav',
+          f: 'http://jordanvidrine.com/assets/soundbanks/lofi-hiphop/tom-2.wav'
         }
       }, {
         title: 'House Kit',
         sounds: {
-          q: 'http://jordanvidrine.com/soundbanks/house/kick.wav',
-          w: 'http://jordanvidrine.com/soundbanks/house/snare.wav',
-          e: 'http://jordanvidrine.com/soundbanks/house/closed-hh.wav',
-          r: 'http://jordanvidrine.com/soundbanks/house/open-hh.wav',
-          a: 'http://jordanvidrine.com/soundbanks/house/clap.wav',
-          s: 'http://jordanvidrine.com/soundbanks/house/perc.wav',
-          d: 'http://jordanvidrine.com/soundbanks/house/tom.wav',
-          f: 'http://jordanvidrine.com/soundbanks/house/tom-2.wav'
+          q: 'http://jordanvidrine.com/assets/soundbanks/house/kick.wav',
+          w: 'http://jordanvidrine.com/assets/soundbanks/house/snare.wav',
+          e: 'http://jordanvidrine.com/assets/soundbanks/house/closed-hh.wav',
+          r: 'http://jordanvidrine.com/assets/soundbanks/house/open-hh.wav',
+          a: 'http://jordanvidrine.com/assets/soundbanks/house/clap.wav',
+          s: 'http://jordanvidrine.com/assets/soundbanks/house/perc.wav',
+          d: 'http://jordanvidrine.com/assets/soundbanks/house/tom.wav',
+          f: 'http://jordanvidrine.com/assets/soundbanks/house/tom-2.wav'
         }
       }, {
         title: 'Rock Kit',
         sounds: {
-          q: 'http://jordanvidrine.com/soundbanks/rock/kick.wav',
-          w: 'http://jordanvidrine.com/soundbanks/rock/snare.wav',
-          e: 'http://jordanvidrine.com/soundbanks/rock/closed-hh.wav',
-          r: 'http://jordanvidrine.com/soundbanks/rock/open-hh.wav',
-          a: 'http://jordanvidrine.com/soundbanks/rock/clap.wav',
-          s: 'http://jordanvidrine.com/soundbanks/rock/cowbell.wav',
-          d: 'http://jordanvidrine.com/soundbanks/rock/tom.wav',
-          f: 'http://jordanvidrine.com/soundbanks/rock/tom-2.wav'
+          q: 'http://jordanvidrine.com/assets/soundbanks/rock/kick.wav',
+          w: 'http://jordanvidrine.com/assets/soundbanks/rock/snare.wav',
+          e: 'http://jordanvidrine.com/assets/soundbanks/rock/closed-hh.wav',
+          r: 'http://jordanvidrine.com/assets/soundbanks/rock/open-hh.wav',
+          a: 'http://jordanvidrine.com/assets/soundbanks/rock/clap.wav',
+          s: 'http://jordanvidrine.com/assets/soundbanks/rock/cowbell.wav',
+          d: 'http://jordanvidrine.com/assets/soundbanks/rock/tom.wav',
+          f: 'http://jordanvidrine.com/assets/soundbanks/rock/tom-2.wav'
         }
       }],
       soundBankSelected: 'Hip-Hop Kit',
